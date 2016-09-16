@@ -19,6 +19,8 @@ simple PacketGenerator{
 }
 
 module TransmitterNode{
+    gates:
+        inout port[];
     submodules:
         node: Node;
         generator: PacketGenerator;

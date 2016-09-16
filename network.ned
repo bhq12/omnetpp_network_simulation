@@ -40,3 +40,26 @@ network Network
         computer2.out --> computer1.in;
 }
 
+network NodeNetwork
+{
+    types:
+        channel WirelessChannel extends ned.DatarateChannel{
+            datarate = 100Mbps;
+        }
+    submodules:
+        transmitter1: TransmitterNode {
+            @display("p=36,38");
+        }
+        transmitter2: TransmitterNode {
+            @display("p=244,38");
+        }
+        receiver: ReceiverNode {
+            @display("p=140,139");
+        }
+    connections:
+        transmitter1.port++ <--> WirelessChannel <--> receiver.port++;
+        transmitter2.port++ <--> WirelessChannel <--> receiver.port++;
+
+
+}
+

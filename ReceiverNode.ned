@@ -19,6 +19,8 @@ simple PacketSink{
 }
 
 module ReceiverNode{
+    gates:
+        inout port[];
 	submodules:
 	    node: Node;
 	    sink: PacketSink;    
