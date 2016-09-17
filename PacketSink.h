@@ -11,15 +11,24 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
-}
+#ifndef PACKETSINK_H_
+#define PACKETSINK_H_
+
+#include <string.h>
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+class PacketSink : public cSimpleModule {
+    protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage* msg);
+    public:
+        PacketSink();
+        virtual ~PacketSink();
+        char logFileName[];
+};
+
+#endif /* PACKETSINK_H_ */

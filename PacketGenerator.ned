@@ -13,13 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-module Node{
+simple PacketGenerator{
     parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
+        int messageSize;
+        int seqno;
 }

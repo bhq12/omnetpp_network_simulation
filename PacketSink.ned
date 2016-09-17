@@ -13,13 +13,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
+simple PacketSink{
+    string logFileName;
 }

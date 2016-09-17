@@ -29,10 +29,18 @@ PROJECTRELATIVE_PATH =
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/Computer.o
+OBJS = \
+    $O/Computer.o \
+    $O/MediumAccessControl.o \
+    $O/PacketGenerator.o \
+    $O/PacketSink.o \
+    $O/Transceiver.o \
+    $O/WirelessChannel.o \
+    $O/AppMessage_m.o
 
 # Message files
-MSGFILES =
+MSGFILES = \
+    AppMessage.msg
 
 # SM files
 SMFILES =
@@ -125,5 +133,17 @@ depend:
 	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
+$O/AppMessage_m.o: AppMessage_m.cc \
+	AppMessage_m.h
 $O/Computer.o: Computer.cc
+$O/MediumAccessControl.o: MediumAccessControl.cc \
+	MediumAccessControl.h
+$O/PacketGenerator.o: PacketGenerator.cc \
+	PacketGenerator.h
+$O/PacketSink.o: PacketSink.cc \
+	PacketSink.h
+$O/Transceiver.o: Transceiver.cc \
+	Transceiver.h
+$O/WirelessChannel.o: WirelessChannel.cc \
+	WirelessChannel.h
 

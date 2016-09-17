@@ -13,15 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-
-simple PacketSink{
-    
-}
-
-module ReceiverNode{
-    gates:
-        inout port[];
+module ReceiverNode extends Node{
 	submodules:
-	    node: Node;
 	    sink: PacketSink;    
 }

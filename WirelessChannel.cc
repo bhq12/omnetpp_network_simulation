@@ -11,15 +11,33 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
+#include <WirelessChannel.h>
+
+Define_Module(WirelessChannel);
+
+void WirelessChannel::initialize(){
+    //this is called at the beginning of the simulation
+    if(strcmp("computer1", getName()) == 0){
+        cMessage* msg = new cMessage("assignmentMsg");
+        send(msg, "out");
+    }
+
 }
+
+void WirelessChannel::handleMessage(cMessage* msg){
+    //this is called whenever a msg arrives at the computer
+    send(msg, "out");
+}
+
+
+WirelessChannel::WirelessChannel() {
+    // TODO Auto-generated constructor stub
+
+}
+
+WirelessChannel::~WirelessChannel() {
+    // TODO Auto-generated destructor stub
+}
+

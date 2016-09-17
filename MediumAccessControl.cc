@@ -11,15 +11,34 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
+#include <MediumAccessControl.h>
+using namespace omnetpp;
+
+Define_Module(MAC);
+
+void MAC::initialize(){
+    //this is called at the beginning of the simulation
+    if(strcmp("computer1", getName()) == 0){
+        cMessage* msg = new cMessage("assignmentMsg");
+        send(msg, "out");
+    }
+
 }
+
+void MAC::handleMessage(cMessage* msg){
+    //this is called whenever a msg arrives at the computer
+    send(msg, "out");
+}
+
+
+MAC::MAC() {
+    // TODO Auto-generated constructor stub
+
+}
+
+MAC::~MAC() {
+    // TODO Auto-generated destructor stub
+}
+

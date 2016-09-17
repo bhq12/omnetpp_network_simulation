@@ -11,15 +11,28 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
-}
+#ifndef TRANSCEIVER_H_
+#define TRANSCEIVER_H_
+#include <string.h>
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+class Transceiver : public cSimpleModule {
+    protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage* msg);
+    public:
+        Transceiver();
+        virtual ~Transceiver();
+        double txPowerDBm;
+        int bitRate;//measured in bits/s
+        double csThreshDBm;//threshold used to detect whether the medium is busy
+        double noisePowerDBm;
+        double turnAroundTime;
+        double csTime;
+};
+
+#endif /* TRANSCEIVER_H_ */

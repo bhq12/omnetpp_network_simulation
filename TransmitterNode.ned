@@ -14,14 +14,9 @@
 // 
 
 
-simple PacketGenerator{
-    
-}
-
-module TransmitterNode{
-    gates:
-        inout port[];
+module TransmitterNode extends Node{
+    parameters:
+        int nodeIndetifier;
     submodules:
-        node: Node;
-        generator: PacketGenerator;
+        generator: PacketGenerator;   
 }

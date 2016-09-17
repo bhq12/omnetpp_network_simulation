@@ -42,10 +42,7 @@ network Network
 
 network NodeNetwork
 {
-    types:
-        channel WirelessChannel extends ned.DatarateChannel{
-            datarate = 100Mbps;
-        }
+    
     submodules:
         transmitter1: TransmitterNode {
             @display("p=36,38");
@@ -56,9 +53,11 @@ network NodeNetwork
         receiver: ReceiverNode {
             @display("p=140,139");
         }
+        chan: WirelessChannel;
     connections:
-        transmitter1.port++ <--> WirelessChannel <--> receiver.port++;
-        transmitter2.port++ <--> WirelessChannel <--> receiver.port++;
+        transmitter1.port++ <--> chan.connection++;
+        transmitter2.port++ <--> chan.connection++;
+        receiver.port++ <--> chan.connection++;
 
 
 }

@@ -11,15 +11,22 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
+#ifndef MAC_H_
+#define MAC_H_
+#include <omnetpp.h>
+#include <string.h>
+using namespace omnetpp;
+class MAC : public cSimpleModule {
+    protected:
+        virtual void initialize();
+        virtual void handleMessage(cMessage* msg);
+    public:
+        MAC();
+        virtual ~MAC();
+        int bufferSize;
+        int maxBackoffs;
+        int backoffDistribution;//probably not an int
+};
 
-module Node{
-    parameters:
-    	int nodeXPosition;
-    	int nodeYPosition;
-    gates:
-        inout port[];
-    submodules:
-        mac: MediumAccessControl;
-        transceiver: Transceiver;
-}
+#endif /* MEDIUMACCESSCONTROL_H_ */

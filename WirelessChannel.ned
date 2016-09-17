@@ -14,5 +14,7 @@
 //
 
     
-channel WirelessChannel{   
+simple WirelessChannel{   
+    gates:
+        inout connection[];
 }
