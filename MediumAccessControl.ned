@@ -17,4 +17,7 @@ simple MAC{
         int bufferSize;
         int maxBackoffs;
         int backoffDistribution;//probably not an int
+ 	gates:
+        input in[];
+        output out[];
 }

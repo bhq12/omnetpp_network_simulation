@@ -16,5 +16,6 @@
     
 simple WirelessChannel{   
     gates:
-        inout connection[];
+        input in[];
+        output out[];
 }

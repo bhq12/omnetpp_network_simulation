@@ -17,9 +17,10 @@ module Node{
     parameters:
     	int nodeXPosition;
     	int nodeYPosition;
-    gates:
-        inout port[];
+ 	gates:
+        input in[];
+        output out[];
     submodules:
-        mac: MediumAccessControl;
+        mac: MAC;
         transceiver: Transceiver;
 }

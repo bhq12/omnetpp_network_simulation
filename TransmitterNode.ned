@@ -16,7 +16,12 @@
 
 module TransmitterNode extends Node{
     parameters:
-        int nodeIndetifier;
+        int nodeIndetifier;      
     submodules:
-        generator: PacketGenerator;   
+        generator: PacketGenerator;
+    connections:
+        generator.out++ --> mac.in++;
+        mac.out++ --> transceiver.in++;
+        mac.in++ <-- transceiver.out++;
+        transceiver.out++ --> out++;
 }

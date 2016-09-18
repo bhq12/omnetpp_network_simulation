@@ -14,5 +14,9 @@
 //
 
 simple PacketSink{
-    string logFileName;
+    parameters:
+    	string logFileName;
+ 	gates:
+        input in[];
+        output out[];
 }

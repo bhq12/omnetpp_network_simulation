@@ -17,4 +17,7 @@ simple PacketGenerator{
     parameters:
         int messageSize;
         int seqno;
+ 	gates:
+        input in[];
+        output out[];
 }
