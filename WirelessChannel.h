@@ -18,6 +18,7 @@
 
 #include <string.h>
 #include <omnetpp.h>
+#include "AppMessage_m.h"
 
 using namespace omnetpp;
 

@@ -28,10 +28,19 @@ void WirelessChannel::initialize(){
 
 void WirelessChannel::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
+
+    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    int senderId = appMsg->getSenderId();
+
+    //TODO: detect the number of connections to the channel rather than hardcoded 3
     for (int i = 0; i < 3; i++)
     {
-        cMessage *copy = msg->dup();
-        send(copy, "out", i);
+        //don't forward msgs back to the original sender
+        if(i != senderId){
+            cMessage *copy = msg->dup();
+            send(copy, "out", i);
+        }
+
     }
     delete msg;
     //send(msg, "out");

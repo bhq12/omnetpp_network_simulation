@@ -145,7 +145,9 @@ $O/PacketGenerator.o: PacketGenerator.cc \
 $O/PacketSink.o: PacketSink.cc \
 	PacketSink.h
 $O/Transceiver.o: Transceiver.cc \
+	AppMessage_m.h \
 	Transceiver.h
 $O/WirelessChannel.o: WirelessChannel.cc \
+	AppMessage_m.h \
 	WirelessChannel.h
 

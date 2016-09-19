@@ -28,7 +28,21 @@ void Transceiver::initialize(){
 
 void Transceiver::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    send(msg, "channelOut");
+    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    cModule* parent = getParentModule();
+    const char* path = (parent -> getFullPath()).c_str();
+
+    int isTransmitter = (strstr(path, "transmitter") != NULL);
+
+    int id = -1;
+
+    if(isTransmitter){
+        id = getParentModule()->par("nodeIndetifier");
+    }
+
+    if((appMsg->getSenderId()) == id && isTransmitter){
+        send(appMsg, "channelOut");
+    }
 }
 
 
