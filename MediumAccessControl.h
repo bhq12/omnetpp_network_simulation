@@ -16,6 +16,7 @@
 #define MAC_H_
 #include <omnetpp.h>
 #include <string.h>
+#include "AppMessage_m.h"
 using namespace omnetpp;
 class MAC : public cSimpleModule {
     protected:

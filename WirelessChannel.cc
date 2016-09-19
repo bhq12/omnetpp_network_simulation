@@ -19,16 +19,22 @@ Define_Module(WirelessChannel);
 
 void WirelessChannel::initialize(){
     //this is called at the beginning of the simulation
-    if(strcmp("computer1", getName()) == 0){
-        cMessage* msg = new cMessage("assignmentMsg");
-        send(msg, "out");
-    }
+    //if(strcmp("computer1", getName()) == 0){
+        //cMessage* msg = new cMessage("assignmentMsg");
+        //send(msg, "out");
+    //}
 
 }
 
 void WirelessChannel::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    send(msg, "out");
+    for (int i = 0; i < 3; i++)
+    {
+        cMessage *copy = msg->dup();
+        send(copy, "out", i);
+    }
+    delete msg;
+    //send(msg, "out");
 }
 
 

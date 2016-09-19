@@ -20,8 +20,6 @@ module TransmitterNode extends Node{
     submodules:
         generator: PacketGenerator;
     connections:
-        generator.out++ --> mac.in++;
-        mac.out++ --> transceiver.in++;
-        mac.in++ <-- transceiver.out++;
-        transceiver.out++ --> out++;
+        generator.out --> mac.packetsIn;
+        mac.packetsOut --> generator.in;
 }

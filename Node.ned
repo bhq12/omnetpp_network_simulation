@@ -18,9 +18,15 @@ module Node{
     	int nodeXPosition;
     	int nodeYPosition;
  	gates:
-        input in[];
-        output out[];
+        input in;
+        output out;
     submodules:
         mac: MAC;
         transceiver: Transceiver;
+connections:
+
+        mac.transceiverOut --> transceiver.macIn;
+        transceiver.macOut --> mac.transceiverIn;
+        transceiver.channelOut --> out;
+        in --> transceiver.channelIn;
 }

@@ -18,6 +18,9 @@ simple MAC{
         int maxBackoffs;
         int backoffDistribution;//probably not an int
  	gates:
-        input in[];
-        output out[];
+        input packetsIn;
+        output packetsOut;
+        
+        input transceiverIn;
+        output transceiverOut;
 }

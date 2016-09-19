@@ -55,9 +55,12 @@ network NodeNetwork
         }
         chan: WirelessChannel;
     connections:
-        transmitter1.out++ --> chan.in++;
-        transmitter2.out++ --> chan.in++;
-        receiver.in++ <-- chan.out++;
+        transmitter1.out --> chan.in++;
+        transmitter2.out --> chan.in++;
+        receiver.out --> chan.in++;
+        chan.out++ --> receiver.in;
+        chan.out++ --> transmitter1.in;
+        chan.out++ --> transmitter2.in;
 
 
 }

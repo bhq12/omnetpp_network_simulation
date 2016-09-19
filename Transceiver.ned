@@ -21,6 +21,9 @@ simple Transceiver{
 		double turnAroundTime;
         double csTime;
 	gates:
-        input in[];
-        output out[];
+        input channelIn;
+        output channelOut;
+        
+        input macIn;
+        output macOut;
 }

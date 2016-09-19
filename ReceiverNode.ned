@@ -17,8 +17,6 @@ module ReceiverNode extends Node{
     submodules:
 	    sink: PacketSink; 
 	connections:
-        mac.out++ --> sink.in++;
-        mac.out++ --> transceiver.in++;
-        mac.in++ <-- transceiver.out++;   
-        in++ --> transceiver.in++;
+        mac.packetsOut --> sink.in;
+        sink.out --> mac.packetsIn;
 }

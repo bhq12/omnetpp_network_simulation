@@ -137,8 +137,10 @@ $O/AppMessage_m.o: AppMessage_m.cc \
 	AppMessage_m.h
 $O/Computer.o: Computer.cc
 $O/MediumAccessControl.o: MediumAccessControl.cc \
+	AppMessage_m.h \
 	MediumAccessControl.h
 $O/PacketGenerator.o: PacketGenerator.cc \
+	AppMessage_m.h \
 	PacketGenerator.h
 $O/PacketSink.o: PacketSink.cc \
 	PacketSink.h

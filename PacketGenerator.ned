@@ -18,6 +18,6 @@ simple PacketGenerator{
         int messageSize;
         int seqno;
  	gates:
-        input in[];
-        output out[];
+        input in;
+        output out;
 }

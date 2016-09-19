@@ -20,16 +20,21 @@ Define_Module(MAC);
 
 void MAC::initialize(){
     //this is called at the beginning of the simulation
-    if(strcmp("computer1", getName()) == 0){
+    /*if(strcmp("computer1", getName()) == 0){
         cMessage* msg = new cMessage("assignmentMsg");
         send(msg, "out");
-    }
+    }*/
 
 }
 
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    send(msg, "out");
+    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    int id = getParentModule()->par("nodeIndetifier");
+
+    if((appMsg->getSenderId()) == id && id){
+        send(appMsg, "transceiverOut");
+    }
 }
 
 

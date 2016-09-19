@@ -20,16 +20,19 @@ Define_Module(PacketGenerator);
 
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
-    if(strcmp("computer1", getName()) == 0){
-        cMessage* msg = new cMessage("assignmentMsg");
+    //if(strcmp("computer1", getName()) == 0){
+        AppMessage* msg = new AppMessage("assignmentMsg");
+        int id = getParentModule()->par("nodeIndetifier");
+
+        msg -> setSenderId(id);
         send(msg, "out");
-    }
+    //}
 
 }
 
 void PacketGenerator::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    send(msg, "out");
+    //send(msg, "out");
 }
 
 
