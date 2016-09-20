@@ -20,19 +20,28 @@ Define_Module(PacketGenerator);
 
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
-    //if(strcmp("computer1", getName()) == 0){
-        AppMessage* msg = new AppMessage("assignmentMsg");
-        int id = getParentModule()->par("nodeIndetifier");
+    AppMessage* msg = new AppMessage("assignmentMsg");
+    int id = getParentModule()->par("nodeIndetifier");
 
-        msg -> setSenderId(id);
-        send(msg, "out");
-    //}
+    msg -> setSenderId(id);
+    scheduleAt(simTime(), msg);
 
 }
 
 void PacketGenerator::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    //send(msg, "out");
+
+    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    int id = getParentModule()->par("nodeIndetifier");
+    ASSERT(appMsg -> getSenderId() == id);
+    send(appMsg, "out");
+
+    //schedule next transmission
+    AppMessage* newMsg = new AppMessage("assignmentMsg");
+    newMsg -> setSenderId(id);
+    scheduleAt(simTime() + 1, newMsg);
+
+
 }
 
 
