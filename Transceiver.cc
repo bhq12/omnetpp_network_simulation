@@ -43,6 +43,9 @@ void Transceiver::handleMessage(cMessage* msg){
     if((appMsg->getSenderId()) == id && isTransmitter){
         send(appMsg, "channelOut");
     }
+    else{
+        delete msg;
+    }
 }
 
 

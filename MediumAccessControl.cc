@@ -30,6 +30,9 @@ void MAC::handleMessage(cMessage* msg){
     if((appMsg->getSenderId()) == id && id){
         send(appMsg, "transceiverOut");
     }
+    else{
+        delete msg;
+    }
 }
 
 

@@ -43,7 +43,6 @@ void WirelessChannel::handleMessage(cMessage* msg){
 
     }
     delete msg;
-    //send(msg, "out");
 }
 
 
