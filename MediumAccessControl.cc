@@ -14,7 +14,6 @@
 // 
 
 #include <MediumAccessControl.h>
-using namespace omnetpp;
 
 Define_Module(MAC);
 

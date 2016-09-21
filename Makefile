@@ -30,7 +30,6 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
 OBJS = \
-    $O/Computer.o \
     $O/MediumAccessControl.o \
     $O/PacketGenerator.o \
     $O/PacketSink.o \
@@ -135,7 +134,6 @@ depend:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/AppMessage_m.o: AppMessage_m.cc \
 	AppMessage_m.h
-$O/Computer.o: Computer.cc
 $O/MediumAccessControl.o: MediumAccessControl.cc \
 	AppMessage_m.h \
 	MediumAccessControl.h
