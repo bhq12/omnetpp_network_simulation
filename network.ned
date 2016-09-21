@@ -12,34 +12,6 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
-
-//
-// TODO documentation
-//
-simple Computer
-{
-    gates:
-        input in;
-        output out;
-}
-
-//
-// TODO documentation
-//
-network Network
-{
-    submodules:
-        computer1: Computer {
-            @display("p=132,96");
-        }
-        computer2: Computer {
-            @display("p=390,96");
-        }
-    connections:
-        computer1.out --> computer2.in;
-        computer2.out --> computer1.in;
-}
-
 network NodeNetwork
 {
     
