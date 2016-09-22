@@ -39,7 +39,7 @@ OBJS = \
     $O/CSRequest_m.o \
     $O/CSResponse_m.o \
     $O/MacMessage_m.o \
-    $O/phyMessage_m.o
+    $O/PhysicalMessage_m.o
 
 # Message files
 MSGFILES = \
@@ -47,7 +47,7 @@ MSGFILES = \
     CSRequest.msg \
     CSResponse.msg \
     MacMessage.msg \
-    phyMessage.msg
+    PhysicalMessage.msg
 
 # SM files
 SMFILES =
@@ -159,14 +159,16 @@ $O/PacketGenerator.o: PacketGenerator.cc \
 	PacketGenerator.h
 $O/PacketSink.o: PacketSink.cc \
 	PacketSink.h
+$O/PhysicalMessage_m.o: PhysicalMessage_m.cc \
+	PhysicalMessage_m.h
 $O/Transceiver.o: Transceiver.cc \
 	CSRequest_m.h \
 	CSResponse_m.h \
+	PhysicalMessage_m.h \
 	Transceiver.h
 $O/WirelessChannel.o: WirelessChannel.cc \
 	AppMessage_m.h \
 	MacMessage_m.h \
+	PhysicalMessage_m.h \
 	WirelessChannel.h
-$O/phyMessage_m.o: phyMessage_m.cc \
-	phyMessage_m.h
 

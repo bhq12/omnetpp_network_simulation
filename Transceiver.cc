@@ -28,7 +28,12 @@ void Transceiver::initialize(){
 
 void Transceiver::handleMacMessage(MacMessage* MacMsg){
     if(MacMsg){
-            send(MacMsg, "channelOut");
+            PhysicalMessage* phyMsg = new PhysicalMessage();
+            phyMsg->encapsulate(MacMsg);
+
+
+
+            send(phyMsg, "channelOut");
     }
 }
 
@@ -64,6 +69,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         else{
             //need to decide what to do when in busy state, see spec section 8.3
         }
+        delete csRequest;
     }
 
 }

@@ -23,7 +23,20 @@ void MAC::initialize(){
 
 void MAC::handleAppMessage(AppMessage* appMsg){
     if(appMsg){
-        addToBuffer(appMsg);
+
+        cModule* parent = getParentModule();
+        const char* path = (parent -> getFullPath()).c_str();
+
+        int isTransmitter = (strstr(path, "transmitter") != NULL);
+        int id = -1;
+        if(isTransmitter){
+            id = getParentModule()->par("nodeIndetifier");
+        }
+
+
+        if(isTransmitter && appMsg->getSenderId() == id){
+            addToBuffer(appMsg);
+        }
     }
 }
 
@@ -51,6 +64,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
         else{
             transmit();
         }
+        delete csResponse;
 
     }
 

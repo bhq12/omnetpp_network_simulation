@@ -28,8 +28,8 @@ void WirelessChannel::initialize(){
 
 void WirelessChannel::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-
-    MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
+    PhysicalMessage* phyMsg = dynamic_cast<PhysicalMessage*>(msg);
+    MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->getEncapsulatedPacket());
     AppMessage* appMsg = dynamic_cast<AppMessage*>(MacMsg->getEncapsulatedPacket());
     int senderId = appMsg->getSenderId();
 
