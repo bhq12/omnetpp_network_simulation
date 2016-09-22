@@ -150,6 +150,8 @@ $O/MacMessage_m.o: MacMessage_m.cc \
 	MacMessage_m.h
 $O/MediumAccessControl.o: MediumAccessControl.cc \
 	AppMessage_m.h \
+	CSResponse_m.h \
+	MacMessage_m.h \
 	MediumAccessControl.h
 $O/PacketGenerator.o: PacketGenerator.cc \
 	AppMessage_m.h \

@@ -16,18 +16,29 @@
 #define MAC_H_
 #include <omnetpp.h>
 #include <string.h>
+#include <queue>
 #include "AppMessage_m.h"
+#include "MacMessage_m.h"
+#include "CSResponse_m.h"
 using namespace omnetpp;
 class MAC : public cSimpleModule {
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
+        virtual bool addToBuffer(AppMessage* msg);
+        virtual void transmit(void);
+        virtual void handleAppMessage(AppMessage* appMsg);
+        virtual void handleCSResponse(CSResponse* csResponse);
     public:
         MAC();
         virtual ~MAC();
         int bufferSize;
         int maxBackoffs;
         int backoffDistribution;//probably not an int
+
+        std::queue<AppMessage*> buffer;
+        int backoffs;
+
 };
 
 #endif /* MEDIUMACCESSCONTROL_H_ */

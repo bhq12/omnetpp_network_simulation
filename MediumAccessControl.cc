@@ -21,9 +21,56 @@ void MAC::initialize(){
     //this is called at the beginning of the simulation
 }
 
+void MAC::handleAppMessage(AppMessage* appMsg){
+    if(appMsg){
+        addToBuffer(appMsg);
+    }
+}
+
+void MAC::handleCSResponse(CSResponse* csResponse){
+    //detect channel if channel busy, send back csResponse with result
+    if(csResponse){
+        bool isBusy = csResponse->getBusyChannel();
+        if(isBusy){
+
+            if(backoffs < maxBackoffs){
+                double waitTime = exponential(backoffDistribution);
+
+                scheduleAt(simTime() + waitTime, new cMessage("retry carrier sense"));
+
+
+            }
+            else{
+                //max backoffs exceeded, drop the packet
+                AppMessage* msg = buffer.front();
+                buffer.pop();
+                delete msg;
+            }
+            backoffs++;
+        }
+        else{
+            transmit();
+        }
+
+    }
+
+}
+
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    handleAppMessage(appMsg);
+
+    CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
+    handleCSResponse(csResponse);
+
+
+
+    //NOTE: This code is not part of spec implementation,
+    //just holding together the basic functionality until
+    //final spec implemented fully
+    //
+    //
     int id = getParentModule()->par("nodeIndetifier");
 
     if((appMsg->getSenderId()) == id && id){
@@ -32,11 +79,40 @@ void MAC::handleMessage(cMessage* msg){
     else{
         delete msg;
     }
+    //
+    //
+    //end of non-spec code
+}
+
+void MAC::transmit(void){
+    AppMessage* msg = buffer.front();
+    buffer.pop();
+
+    MacMessage* MacMsg = new MacMessage();
+    MacMsg->encapsulate(msg);
+
+    send(MacMsg, "transceiverOut");
+}
+
+bool MAC::addToBuffer(AppMessage* msg){
+    //returns true if packet successfully buffered, false if dropped
+    if(buffer.size() < bufferSize){
+        buffer.push(msg);
+        return true;
+    }
+    else{
+        //drop packet
+        delete msg;
+        return false;
+
+    }
 }
 
 
 MAC::MAC() {
-    // TODO Auto-generated constructor stub
+
+
+    backoffs = 0;
 
 }
 
