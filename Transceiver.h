@@ -18,13 +18,25 @@
 #include <string.h>
 #include <omnetpp.h>
 #include "AppMessage_m.h"
+#include "CSRequest_m.h"
+#include "CSResponse_m.h"
 
 using namespace omnetpp;
 
+
 class Transceiver : public cSimpleModule {
+
+public:
+    typedef enum{
+        Transmit = 0,
+        Receive
+    } TransceiverState_t;
+
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
+        virtual void handleCSRequest(CSRequest* csRequest);
+        virtual void handleAppMessage(AppMessage* appMsg);
     public:
         Transceiver();
         virtual ~Transceiver();
@@ -34,6 +46,8 @@ class Transceiver : public cSimpleModule {
         double noisePowerDBm;
         double turnAroundTime;
         double csTime;
+
+        TransceiverState_t state;
 };
 
 #endif /* TRANSCEIVER_H_ */

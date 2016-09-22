@@ -14,5 +14,5 @@
 //
 
 packet CSResponse{
- 	bool busyChannel   
+ 	bool busyChannel;
 }

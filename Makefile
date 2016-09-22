@@ -35,11 +35,19 @@ OBJS = \
     $O/PacketSink.o \
     $O/Transceiver.o \
     $O/WirelessChannel.o \
-    $O/AppMessage_m.o
+    $O/AppMessage_m.o \
+    $O/CSRequest_m.o \
+    $O/CSResponse_m.o \
+    $O/MacMessage_m.o \
+    $O/phyMessage_m.o
 
 # Message files
 MSGFILES = \
-    AppMessage.msg
+    AppMessage.msg \
+    CSRequest.msg \
+    CSResponse.msg \
+    MacMessage.msg \
+    phyMessage.msg
 
 # SM files
 SMFILES =
@@ -134,6 +142,12 @@ depend:
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/AppMessage_m.o: AppMessage_m.cc \
 	AppMessage_m.h
+$O/CSRequest_m.o: CSRequest_m.cc \
+	CSRequest_m.h
+$O/CSResponse_m.o: CSResponse_m.cc \
+	CSResponse_m.h
+$O/MacMessage_m.o: MacMessage_m.cc \
+	MacMessage_m.h
 $O/MediumAccessControl.o: MediumAccessControl.cc \
 	AppMessage_m.h \
 	MediumAccessControl.h
@@ -144,8 +158,12 @@ $O/PacketSink.o: PacketSink.cc \
 	PacketSink.h
 $O/Transceiver.o: Transceiver.cc \
 	AppMessage_m.h \
+	CSRequest_m.h \
+	CSResponse_m.h \
 	Transceiver.h
 $O/WirelessChannel.o: WirelessChannel.cc \
 	AppMessage_m.h \
 	WirelessChannel.h
+$O/phyMessage_m.o: phyMessage_m.cc \
+	phyMessage_m.h
 

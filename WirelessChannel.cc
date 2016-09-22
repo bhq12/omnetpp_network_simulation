@@ -32,8 +32,9 @@ void WirelessChannel::handleMessage(cMessage* msg){
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
     int senderId = appMsg->getSenderId();
 
-    //TODO: detect the number of connections to the channel rather than hardcoded 3
-    for (int i = 0; i < 3; i++)
+    int gates = gateCount() / 2;
+
+    for (int i = 0; i < gates; i++)
     {
         //don't forward msgs back to the original sender
         if(i != senderId){
