@@ -64,21 +64,28 @@ void MAC::handleMessage(cMessage* msg){
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
     handleCSResponse(csResponse);
 
+    if(buffer.size() > 0){
+        //perform carrier sense in order to send packets
+        CSRequest* csRequest = new CSRequest();
+        send(csRequest, "transceiverOut");
+    }
+    else{
+        //wait for new packets to arrive from generator
+    }
 
-
-    //NOTE: This code is not part of spec implementation,
+    //NOTE: The following code is not part of spec implementation,
     //just holding together the basic functionality until
     //final spec implemented fully
     //
     //
-    int id = getParentModule()->par("nodeIndetifier");
+    //int id = getParentModule()->par("nodeIndetifier");
 
-    if((appMsg->getSenderId()) == id && id){
-        send(appMsg, "transceiverOut");
-    }
-    else{
-        delete msg;
-    }
+    //if((appMsg->getSenderId()) == id && id){
+    //    send(appMsg, "transceiverOut");
+    //}
+    //else{
+    //    delete msg;
+    //}
     //
     //
     //end of non-spec code

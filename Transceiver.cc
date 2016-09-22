@@ -26,28 +26,26 @@ void Transceiver::initialize(){
 
 }
 
-void Transceiver::handleAppMessage(AppMessage* appMsg){
-    if(appMsg){
-        cModule* parent = getParentModule();
-        const char* path = (parent -> getFullPath()).c_str();
-
-        int isTransmitter = (strstr(path, "transmitter") != NULL);
-
-        int id = -1;
-
-        if(isTransmitter){
-            id = parent->par("nodeIndetifier");
-        }
-
-        if((appMsg->getSenderId()) == id && isTransmitter){
-            send(appMsg, "channelOut");
-        }
+void Transceiver::handleMacMessage(MacMessage* MacMsg){
+    if(MacMsg){
+            send(MacMsg, "channelOut");
     }
 }
 
 void Transceiver::handleCSRequest(CSRequest* csRequest){
     //detect channel if channel busy, send back csResponse with result
     if(csRequest){
+
+        //TEMPORARY for testing MAC
+        //
+        //
+        CSResponse* response = new CSResponse();
+        response -> setBusyChannel(false);
+        send(response, "macOut");
+        //
+        //
+        //TEMPORARY
+
         if(state == Receive){
             //calculate the current channel signal power
             //double channlePower = gimmePowerPlz();
@@ -76,8 +74,8 @@ void Transceiver::handleMessage(cMessage* msg){
     //TODO: the transceiver should never get an app message; only MAC, physical and
     //carrier sense messages. Implement creation of MAC messages at MAC layer then replace
     //this with handleMACMessage()
-    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
-    handleAppMessage(appMsg);
+    MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
+    handleMacMessage(MacMsg);
 
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);
     handleCSRequest(csRequest);
@@ -89,18 +87,18 @@ void Transceiver::handleMessage(cMessage* msg){
     //is complete
     //
     //
-    cModule* parent = getParentModule();
-    const char* path = (parent -> getFullPath()).c_str();
+    //cModule* parent = getParentModule();
+    //const char* path = (parent -> getFullPath()).c_str();
 
-    int isTransmitter = (strstr(path, "transmitter") != NULL);
-    int id = -1;
-    if(isTransmitter){
-        id = parent->par("nodeIndetifier");
-    }
-
-    if(!isTransmitter || id != appMsg->getSenderId()){
-        delete msg;
-    }
+    //int isTransmitter = (strstr(path, "transmitter") != NULL);
+    //int id = -1;
+//    if(isTransmitter){
+//        id = parent->par("nodeIndetifier");
+//    }
+//
+//    if(!isTransmitter || id != appMsg->getSenderId()){
+//        delete msg;
+//    }
     //
     //
     //end of memory leak code

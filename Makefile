@@ -150,6 +150,7 @@ $O/MacMessage_m.o: MacMessage_m.cc \
 	MacMessage_m.h
 $O/MediumAccessControl.o: MediumAccessControl.cc \
 	AppMessage_m.h \
+	CSRequest_m.h \
 	CSResponse_m.h \
 	MacMessage_m.h \
 	MediumAccessControl.h
@@ -159,12 +160,12 @@ $O/PacketGenerator.o: PacketGenerator.cc \
 $O/PacketSink.o: PacketSink.cc \
 	PacketSink.h
 $O/Transceiver.o: Transceiver.cc \
-	AppMessage_m.h \
 	CSRequest_m.h \
 	CSResponse_m.h \
 	Transceiver.h
 $O/WirelessChannel.o: WirelessChannel.cc \
 	AppMessage_m.h \
+	MacMessage_m.h \
 	WirelessChannel.h
 $O/phyMessage_m.o: phyMessage_m.cc \
 	phyMessage_m.h

@@ -17,7 +17,7 @@
 #define TRANSCEIVER_H_
 #include <string.h>
 #include <omnetpp.h>
-#include "AppMessage_m.h"
+#include "MACMessage_m.h"
 #include "CSRequest_m.h"
 #include "CSResponse_m.h"
 
@@ -36,7 +36,7 @@ public:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
         virtual void handleCSRequest(CSRequest* csRequest);
-        virtual void handleAppMessage(AppMessage* appMsg);
+        virtual void handleMacMessage(MacMessage* appMsg);
     public:
         Transceiver();
         virtual ~Transceiver();

@@ -29,7 +29,8 @@ void WirelessChannel::initialize(){
 void WirelessChannel::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
 
-    AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
+    MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
+    AppMessage* appMsg = dynamic_cast<AppMessage*>(MacMsg->getEncapsulatedPacket());
     int senderId = appMsg->getSenderId();
 
     int gates = gateCount() / 2;

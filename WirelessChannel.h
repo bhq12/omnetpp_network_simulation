@@ -19,6 +19,7 @@
 #include <string.h>
 #include <omnetpp.h>
 #include "AppMessage_m.h"
+#include "MacMessage_m.h"
 
 using namespace omnetpp;
 
