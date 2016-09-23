@@ -30,10 +30,15 @@ void Transceiver::handleMacMessage(MacMessage* MacMsg){
     if(MacMsg){
             PhysicalMessage* phyMsg = new PhysicalMessage();
             phyMsg->encapsulate(MacMsg);
-
-
-
             send(phyMsg, "channelOut");
+    }
+}
+
+void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
+    if(phyMsg){
+            MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->getEncapsulatedPacket());
+            send(MacMsg->dup(), "macOut");
+            delete phyMsg;
     }
 }
 
@@ -69,7 +74,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         else{
             //need to decide what to do when in busy state, see spec section 8.3
         }
-        delete csRequest;
+        //delete csRequest;
     }
 
 }
@@ -77,16 +82,13 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
 void Transceiver::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
 
-    //TODO: the transceiver should never get an app message; only MAC, physical and
-    //carrier sense messages. Implement creation of MAC messages at MAC layer then replace
-    //this with handleMACMessage()
     MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
-    handleMacMessage(MacMsg);
-
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);
+    PhysicalMessage* phyMsg = dynamic_cast<PhysicalMessage*>(msg);
+
+    handleMacMessage(MacMsg);
     handleCSRequest(csRequest);
-
-
+    handlePhysicalMessage(phyMsg);
 
     //NOTE: the following code is not implementing any of the specification
     //it is just holding together memory leaks until full implementation

@@ -19,6 +19,7 @@
 #include <queue>
 #include "AppMessage_m.h"
 #include "MacMessage_m.h"
+#include "PhysicalMessage_m.h"
 #include "CSResponse_m.h"
 #include "CSRequest_m.h"
 using namespace omnetpp;
@@ -30,6 +31,7 @@ class MAC : public cSimpleModule {
         virtual void transmit(void);
         virtual void handleAppMessage(AppMessage* appMsg);
         virtual void handleCSResponse(CSResponse* csResponse);
+        virtual void handleMacMessage(MacMessage* macMsg);
     public:
         MAC();
         virtual ~MAC();

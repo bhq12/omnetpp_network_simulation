@@ -23,20 +23,13 @@ void MAC::initialize(){
 
 void MAC::handleAppMessage(AppMessage* appMsg){
     if(appMsg){
-
-        cModule* parent = getParentModule();
-        const char* path = (parent -> getFullPath()).c_str();
-
-        int isTransmitter = (strstr(path, "transmitter") != NULL);
-        int id = -1;
-        if(isTransmitter){
-            id = getParentModule()->par("nodeIndetifier");
-        }
-
-
-        if(isTransmitter && appMsg->getSenderId() == id){
             addToBuffer(appMsg);
-        }
+    }
+}
+
+void MAC::handleMacMessage(MacMessage* macMsg){
+    if(macMsg){
+        delete macMsg;
     }
 }
 
@@ -73,9 +66,12 @@ void MAC::handleCSResponse(CSResponse* csResponse){
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
-    handleAppMessage(appMsg);
-
+    MacMessage* macMsg = dynamic_cast<MacMessage*>(msg);
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
+
+
+    handleAppMessage(appMsg);
+    handleMacMessage(macMsg);
     handleCSResponse(csResponse);
 
     if(buffer.size() > 0){

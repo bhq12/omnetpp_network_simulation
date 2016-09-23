@@ -38,6 +38,7 @@ public:
         virtual void handleMessage(cMessage* msg);
         virtual void handleCSRequest(CSRequest* csRequest);
         virtual void handleMacMessage(MacMessage* appMsg);
+        virtual void handlePhysicalMessage(PhysicalMessage* phyMsg);
     public:
         Transceiver();
         virtual ~Transceiver();

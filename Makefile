@@ -153,7 +153,8 @@ $O/MediumAccessControl.o: MediumAccessControl.cc \
 	CSRequest_m.h \
 	CSResponse_m.h \
 	MacMessage_m.h \
-	MediumAccessControl.h
+	MediumAccessControl.h \
+	PhysicalMessage_m.h
 $O/PacketGenerator.o: PacketGenerator.cc \
 	AppMessage_m.h \
 	PacketGenerator.h
