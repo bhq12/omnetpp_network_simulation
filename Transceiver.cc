@@ -30,6 +30,7 @@ void Transceiver::handleMacMessage(MacMessage* MacMsg){
     if(MacMsg){
             PhysicalMessage* phyMsg = new PhysicalMessage();
             phyMsg->encapsulate(MacMsg);
+            MacMsg = nullptr;
             send(phyMsg, "channelOut");
     }
 }
@@ -39,6 +40,7 @@ void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
             MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->getEncapsulatedPacket());
             send(MacMsg->dup(), "macOut");
             delete phyMsg;
+            delete MacMsg;
     }
 }
 

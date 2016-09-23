@@ -108,6 +108,7 @@ void MAC::transmit(void){
     MacMessage* MacMsg = new MacMessage();
     MacMsg->encapsulate(msg);
 
+    msg = nullptr;
     send(MacMsg, "transceiverOut");
 }
 

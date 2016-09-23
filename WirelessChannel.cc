@@ -44,6 +44,9 @@ void WirelessChannel::handleMessage(cMessage* msg){
         }
 
     }
+    phyMsg = nullptr;
+    MacMsg = nullptr;
+    appMsg = nullptr;
     delete msg;
 }
 
