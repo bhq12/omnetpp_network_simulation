@@ -76,7 +76,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         else{
             //need to decide what to do when in busy state, see spec section 8.3
         }
-        //delete csRequest;
+        delete csRequest;
     }
 
 }
