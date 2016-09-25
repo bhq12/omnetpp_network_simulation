@@ -37,16 +37,18 @@ void Transceiver::handleMacMessage(MacMessage* MacMsg){
 
 void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
     if(phyMsg){
-            MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->getEncapsulatedPacket());
-            send(MacMsg->dup(), "macOut");
+            MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->decapsulate());
+            send(MacMsg, "macOut");
             delete phyMsg;
-            delete MacMsg;
     }
 }
 
 void Transceiver::handleCSRequest(CSRequest* csRequest){
     //detect channel if channel busy, send back csResponse with result
     if(csRequest){
+
+        delete csRequest;
+
 
         //TEMPORARY for testing MAC
         //
@@ -76,7 +78,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         else{
             //need to decide what to do when in busy state, see spec section 8.3
         }
-        delete csRequest;
+
     }
 
 }
@@ -91,27 +93,6 @@ void Transceiver::handleMessage(cMessage* msg){
     handleMacMessage(MacMsg);
     handleCSRequest(csRequest);
     handlePhysicalMessage(phyMsg);
-
-    //NOTE: the following code is not implementing any of the specification
-    //it is just holding together memory leaks until full implementation
-    //is complete
-    //
-    //
-    //cModule* parent = getParentModule();
-    //const char* path = (parent -> getFullPath()).c_str();
-
-    //int isTransmitter = (strstr(path, "transmitter") != NULL);
-    //int id = -1;
-//    if(isTransmitter){
-//        id = parent->par("nodeIndetifier");
-//    }
-//
-//    if(!isTransmitter || id != appMsg->getSenderId()){
-//        delete msg;
-//    }
-    //
-    //
-    //end of memory leak code
 }
 
 

@@ -18,17 +18,13 @@
 Define_Module(PacketSink);
 
 void PacketSink::initialize(){
-    //this is called at the beginning of the simulation
-    if(strcmp("computer1", getName()) == 0){
-        cMessage* msg = new cMessage("assignmentMsg");
-        send(msg, "out");
-    }
+    //just chill
 
 }
 
 void PacketSink::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    send(msg, "out");
+    delete msg;
 }
 
 

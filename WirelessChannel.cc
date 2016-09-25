@@ -28,25 +28,15 @@ void WirelessChannel::initialize(){
 
 void WirelessChannel::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    PhysicalMessage* phyMsg = dynamic_cast<PhysicalMessage*>(msg);
-    MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->getEncapsulatedPacket());
-    AppMessage* appMsg = dynamic_cast<AppMessage*>(MacMsg->getEncapsulatedPacket());
-    int senderId = appMsg->getSenderId();
 
     int gates = gateCount() / 2;
 
     for (int i = 0; i < gates; i++)
     {
-        //don't forward msgs back to the original sender
-        if(i != senderId){
-            cMessage *copy = msg->dup();
-            send(copy, "out", i);
-        }
 
+        cMessage *copy = msg->dup();
+        send(copy, "out", i);
     }
-    phyMsg = nullptr;
-    MacMsg = nullptr;
-    appMsg = nullptr;
     delete msg;
 }
 

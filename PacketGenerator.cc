@@ -20,28 +20,27 @@ Define_Module(PacketGenerator);
 
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
-    AppMessage* msg = new AppMessage("assignmentMsg");
-    int id = getParentModule()->par("nodeIndetifier");
-
-    msg -> setSenderId(id);
+    cMessage* msg = new cMessage("NEW_MSG");
     scheduleAt(simTime(), msg);
 
 }
 
 void PacketGenerator::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
-    int id = getParentModule()->par("nodeIndetifier");
-    ASSERT(appMsg -> getSenderId() == id);
-    send(appMsg, "out");
 
-    //schedule next transmission
-    AppMessage* newMsg = new AppMessage("assignmentMsg");
-    newMsg -> setSenderId(id);
-    scheduleAt(simTime() + 1, newMsg);
+    if(!appMsg){
+        //not an app message, so must be a transmission schedule message
+        AppMessage* appMsg = new AppMessage("assignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsg");
+        int id = getParentModule()->par("nodeIndetifier");
+        appMsg -> setSenderId(id);
+        send(appMsg, "out");
 
-
+        //schedule next transmission
+        cMessage* newMsg = new cMessage("NEW_MSG");
+        scheduleAt(simTime() + 1, newMsg);
+    }
+    delete msg;
 }
 
 

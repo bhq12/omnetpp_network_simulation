@@ -19,6 +19,8 @@ Define_Module(MAC);
 
 void MAC::initialize(){
     //this is called at the beginning of the simulation
+    bufferSize  = (int)par("bufferSize");
+    backoffs = 0;
 }
 
 void MAC::handleAppMessage(AppMessage* appMsg){
@@ -29,6 +31,10 @@ void MAC::handleAppMessage(AppMessage* appMsg){
 
 void MAC::handleMacMessage(MacMessage* macMsg){
     if(macMsg){
+        //delete macMsg;
+
+        AppMessage* appMsg = dynamic_cast<AppMessage*>(macMsg->decapsulate());
+        send(appMsg, "packetsOut");
         delete macMsg;
     }
 }
@@ -37,6 +43,8 @@ void MAC::handleCSResponse(CSResponse* csResponse){
     //detect channel if channel busy, send back csResponse with result
     if(csResponse){
         bool isBusy = csResponse->getBusyChannel();
+        delete csResponse;
+
         if(isBusy){
 
             if(backoffs < maxBackoffs){
@@ -57,7 +65,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
         else{
             transmit();
         }
-        delete csResponse;
+
 
     }
 
@@ -82,23 +90,6 @@ void MAC::handleMessage(cMessage* msg){
     else{
         //wait for new packets to arrive from generator
     }
-
-    //NOTE: The following code is not part of spec implementation,
-    //just holding together the basic functionality until
-    //final spec implemented fully
-    //
-    //
-    //int id = getParentModule()->par("nodeIndetifier");
-
-    //if((appMsg->getSenderId()) == id && id){
-    //    send(appMsg, "transceiverOut");
-    //}
-    //else{
-    //    delete msg;
-    //}
-    //
-    //
-    //end of non-spec code
 }
 
 void MAC::transmit(void){
@@ -107,9 +98,9 @@ void MAC::transmit(void){
 
     MacMessage* MacMsg = new MacMessage();
     MacMsg->encapsulate(msg);
-
-    msg = nullptr;
+    msg =  nullptr;
     send(MacMsg, "transceiverOut");
+
 }
 
 bool MAC::addToBuffer(AppMessage* msg){
@@ -128,9 +119,6 @@ bool MAC::addToBuffer(AppMessage* msg){
 
 
 MAC::MAC() {
-
-
-    backoffs = 0;
 
 }
 
