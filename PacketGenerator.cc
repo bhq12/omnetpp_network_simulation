@@ -20,6 +20,7 @@ Define_Module(PacketGenerator);
 
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
+    EV_INFO << "Packet created (request new)" << endl;
     cMessage* msg = new cMessage("NEW_MSG");
     scheduleAt(simTime(), msg);
 
@@ -31,15 +32,19 @@ void PacketGenerator::handleMessage(cMessage* msg){
 
     if(!appMsg){
         //not an app message, so must be a transmission schedule message
-        AppMessage* appMsg = new AppMessage("assignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsgassignmentMsg");
+        EV_INFO << "Packet created (app message)" << endl;
+        AppMessage* appMsg = new AppMessage("generated");
         int id = getParentModule()->par("nodeIndetifier");
         appMsg -> setSenderId(id);
         send(appMsg, "out");
 
         //schedule next transmission
+        EV_INFO << "Packet created (request new)" << endl;
+
         cMessage* newMsg = new cMessage("NEW_MSG");
         scheduleAt(simTime() + 1, newMsg);
     }
+    EV_INFO << "Packet deleted (handled message)" << endl;
     delete msg;
 }
 

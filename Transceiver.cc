@@ -28,6 +28,8 @@ void Transceiver::initialize(){
 
 void Transceiver::handleMacMessage(MacMessage* MacMsg){
     if(MacMsg){
+            EV_INFO << "Packet encapsulated mac to phys" << endl;
+
             PhysicalMessage* phyMsg = new PhysicalMessage();
             phyMsg->encapsulate(MacMsg);
             MacMsg = nullptr;
@@ -37,15 +39,19 @@ void Transceiver::handleMacMessage(MacMessage* MacMsg){
 
 void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
     if(phyMsg){
-            MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->decapsulate());
-            send(MacMsg, "macOut");
-            delete phyMsg;
+        EV_INFO << "Packet decapsulated phys to mac" << endl;
+
+        MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->decapsulate());
+        send(MacMsg, "macOut");
+        delete phyMsg;
+
     }
 }
 
 void Transceiver::handleCSRequest(CSRequest* csRequest){
     //detect channel if channel busy, send back csResponse with result
     if(csRequest){
+        EV_INFO << "Packet deeleted request" << endl;
 
         delete csRequest;
 
@@ -53,6 +59,8 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         //TEMPORARY for testing MAC
         //
         //
+        EV_INFO << "Packet created reponse" << endl;
+
         CSResponse* response = new CSResponse();
         response -> setBusyChannel(false);
         send(response, "macOut");
@@ -85,6 +93,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
 
 void Transceiver::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
+    EV_INFO << "Packet casted" << endl;
 
     MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);

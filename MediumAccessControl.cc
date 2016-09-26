@@ -32,9 +32,13 @@ void MAC::handleAppMessage(AppMessage* appMsg){
 void MAC::handleMacMessage(MacMessage* macMsg){
     if(macMsg){
         //delete macMsg;
+        EV_INFO << "Packet decapsulated (mac to app)" << endl;
 
         AppMessage* appMsg = dynamic_cast<AppMessage*>(macMsg->decapsulate());
         send(appMsg, "packetsOut");
+
+        EV_INFO << "Packet deleted (delete mac msg)" << endl;
+
         delete macMsg;
     }
 }
@@ -43,6 +47,8 @@ void MAC::handleCSResponse(CSResponse* csResponse){
     //detect channel if channel busy, send back csResponse with result
     if(csResponse){
         bool isBusy = csResponse->getBusyChannel();
+        EV_INFO << "Packet deleted (reponse)" << endl;
+
         delete csResponse;
 
         if(isBusy){
@@ -73,6 +79,8 @@ void MAC::handleCSResponse(CSResponse* csResponse){
 
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
+    EV_INFO << "message casted from mac" << endl;
+
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
     MacMessage* macMsg = dynamic_cast<MacMessage*>(msg);
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
@@ -84,6 +92,8 @@ void MAC::handleMessage(cMessage* msg){
 
     if(buffer.size() > 0){
         //perform carrier sense in order to send packets
+        EV_INFO << "Packet created (request)" << endl;
+
         CSRequest* csRequest = new CSRequest();
         send(csRequest, "transceiverOut");
     }
@@ -95,8 +105,9 @@ void MAC::handleMessage(cMessage* msg){
 void MAC::transmit(void){
     AppMessage* msg = buffer.front();
     buffer.pop();
-
     MacMessage* MacMsg = new MacMessage();
+    EV_INFO << "Packet encapsulated app to mac" << endl;
+
     MacMsg->encapsulate(msg);
     msg =  nullptr;
     send(MacMsg, "transceiverOut");

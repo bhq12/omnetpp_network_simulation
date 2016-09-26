@@ -18,6 +18,7 @@
 #include <string.h>
 #include <omnetpp.h>
 #include "MACMessage_m.h"
+#include "AppMessage_m.h"
 #include "PhysicalMessage_m.h"
 #include "CSRequest_m.h"
 #include "CSResponse_m.h"

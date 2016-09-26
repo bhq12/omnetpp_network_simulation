@@ -34,7 +34,5 @@ network NodeNetwork
         chan.out++ --> receiver.in;
         chan.out++ --> transmitter1.in;
         chan.out++ --> transmitter2.in;
-
-
 }
 

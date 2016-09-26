@@ -33,10 +33,13 @@ void WirelessChannel::handleMessage(cMessage* msg){
 
     for (int i = 0; i < gates; i++)
     {
+        EV_INFO << "Packet duplicated physical" << endl;
 
         cMessage *copy = msg->dup();
         send(copy, "out", i);
     }
+    EV_INFO << "Packet deleted phys" << endl;
+
     delete msg;
 }
 
