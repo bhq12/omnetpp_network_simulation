@@ -15,11 +15,16 @@
 
 #ifndef TRANSCEIVER_H_
 #define TRANSCEIVER_H_
+#include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <omnetpp.h>
+#include "globals.h"
 #include "MACMessage_m.h"
 #include "AppMessage_m.h"
 #include "PhysicalMessage_m.h"
+#include "SignalStartMessage_m.h"
+#include "SignalEndMessage_m.h"
 #include "CSRequest_m.h"
 #include "CSResponse_m.h"
 
@@ -40,6 +45,16 @@ public:
         virtual void handleCSRequest(CSRequest* csRequest);
         virtual void handleMacMessage(MacMessage* appMsg);
         virtual void handlePhysicalMessage(PhysicalMessage* phyMsg);
+        virtual void handleEndTransmission(cMessage* msg);
+        virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
+        virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
+        virtual double findChannelPowerDB();
+        virtual double DBToRatio(double num);
+        virtual double RatioToDB(double num);
+        virtual double findPacketPowerDB(SignalStartMessage* msg);
+        virtual double findTransmitterDistance(SignalStartMessage* msg);
+        virtual double findPowerLossDB(double distance);
+
     public:
         Transceiver();
         virtual ~Transceiver();
@@ -51,6 +66,10 @@ public:
         double csTime;
 
         TransceiverState_t state;
+
+        std::vector<SignalStartMessage*> currentTransmissions;
+        int nodeXPosition;
+        int nodeYPosition;
 };
 
 #endif /* TRANSCEIVER_H_ */

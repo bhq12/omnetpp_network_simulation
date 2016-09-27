@@ -37,7 +37,7 @@ class MAC : public cSimpleModule {
         virtual ~MAC();
         int bufferSize;
         int maxBackoffs;
-        int backoffDistribution;//probably not an int
+        double backoffDistribution;
 
         std::queue<AppMessage*> buffer;
         int backoffs;

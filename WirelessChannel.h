@@ -33,5 +33,4 @@ class WirelessChannel : public cSimpleModule {
         virtual void handleMessage(cMessage* msg);
 };
 
-
 #endif /* WIRELESSCHANNEL_H_ */

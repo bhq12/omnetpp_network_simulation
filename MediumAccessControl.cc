@@ -79,7 +79,6 @@ void MAC::handleCSResponse(CSResponse* csResponse){
 
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
-    EV_INFO << "message casted from mac" << endl;
 
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
     MacMessage* macMsg = dynamic_cast<MacMessage*>(msg);

@@ -11,28 +11,8 @@
 // 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
-
-
-network NodeNetwork
-{
-    submodules:
-        transmitter1: TransmitterNode {
-            @display("p=36,38");
-        }
-        transmitter2: TransmitterNode {
-            @display("p=244,38");
-        }
-        receiver: ReceiverNode {
-            @display("p=140,139");
-        }
-        chan: WirelessChannel;
-    connections:
-        transmitter1.out --> chan.in++;
-        transmitter2.out --> chan.in++;
-        receiver.out --> chan.in++;
-        chan.out++ --> receiver.in;
-        chan.out++ --> transmitter1.in;
-        chan.out++ --> transmitter2.in;
+//
+packet SignalEndMessage {
+    
 }
-
+    

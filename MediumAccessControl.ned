@@ -16,7 +16,7 @@ simple MAC{
     parameters:
         int bufferSize;
         int maxBackoffs;
-        int backoffDistribution;//probably not an int
+        double backoffDistribution;
  	gates:
         input packetsIn;
         output packetsOut;

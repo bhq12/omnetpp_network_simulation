@@ -19,22 +19,60 @@ Define_Module(Transceiver);
 
 void Transceiver::initialize(){
     //this is called at the beginning of the simulation
-    /*if(strcmp("computer1", getName()) == 0){
-        cMessage* msg = new cMessage("assignmentMsg");
-        send(msg, "out");
-    }*/
+
+    txPowerDBm = par("txPowerDBm");
+    bitRate = par("bitRate");//measured in bits/s
+    csThreshDBm = par("csThreshDBm");//threshold used to detect whether the medium is busy
+    noisePowerDBm = par("noisePowerDBm");
+    turnAroundTime = par("turnAroundTime");
+    csTime = par("csTime");
+
+    state = Receive;
+
+    nodeXPosition = getParentModule()->par("nodeXPosition");
+    nodeYPosition = getParentModule()->par("nodeYPosition");
+}
+
+//TODO: implement turn-around time
+void Transceiver::handleMacMessage(MacMessage* MacMsg){
+    if(MacMsg){
+        SignalStartMessage* startMessage = new SignalStartMessage();
+        int packetLength = MacMsg -> getBitLength();
+        delete MacMsg;
+
+        state = Transmit;
+        send(startMessage, "channelOut");
+
+        scheduleAt(simTime() + (packetLength / bitRate), new cMessage("END_TRANSMISSION"));
+    }
+}
+
+void Transceiver::handleEndTransmission(cMessage* msg){
+    const char* name = msg->getName();
+    if (strcmp("END_TRANSMISSION", name) == 0){
+        delete msg;
+        SignalEndMessage* endMessage = new SignalEndMessage();
+        send(endMessage, "channelOut");
+        state = Receive;
+    }
 
 }
 
-void Transceiver::handleMacMessage(MacMessage* MacMsg){
-    if(MacMsg){
-            EV_INFO << "Packet encapsulated mac to phys" << endl;
-
-            PhysicalMessage* phyMsg = new PhysicalMessage();
-            phyMsg->encapsulate(MacMsg);
-            MacMsg = nullptr;
-            send(phyMsg, "channelOut");
+void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
+    if (startMsg){
+        delete startMsg;//TODO: want to add to current transmissions vector, then delete after stop is received
+        //currentTransmissions.insert(currentTransmissions.begin(), startMsg)
+        state = Receive;
     }
+
+}
+
+void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
+    if (endMsg){
+        delete endMsg;
+        state = Receive;
+    }
+
 }
 
 void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
@@ -59,31 +97,38 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         //TEMPORARY for testing MAC
         //
         //
-        EV_INFO << "Packet created reponse" << endl;
+        //EV_INFO << "Packet created reponse" << endl;
 
-        CSResponse* response = new CSResponse();
-        response -> setBusyChannel(false);
-        send(response, "macOut");
+        //CSResponse* response = new CSResponse();
+        //response -> setBusyChannel(false);
+        //send(response, "macOut");
         //
         //
         //TEMPORARY
 
         if(state == Receive){
-            //calculate the current channel signal power
-            //double channlePower = gimmePowerPlz();
 
-            //wait for carrier sense time delay
-            //threadWait(csTime); //or maybe schedule an event?
+
+            //calculate the current channel signal power
+            double channelPower = findChannelPowerDB();
+
+            //TODO: wait for carrier sense time delay
+            //schedule an event in the future simtime() + csdelay
 
             //decide if the channel is busy
-            //bool isBusy = channelPower > csThreshDBm;
+            bool isBusy = channelPower > csThreshDBm;
+            EV_INFO << "in recv state, Channel is busy: " << isBusy << "." << endl;
 
-            //CsResponse* response = new CSResponse();
-            //response -> setBusyChannel(isBusy);
-            //send(response, "macOut");
+            CSResponse* response = new CSResponse();
+            response -> setBusyChannel(isBusy);
+            send(response, "macOut");
 
         }
         else{
+            EV_INFO << "in transmit state" << endl;
+            CSResponse* response = new CSResponse();
+            response -> setBusyChannel(true);
+            send(response, "macOut");
             //need to decide what to do when in busy state, see spec section 8.3
         }
 
@@ -93,18 +138,88 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
 
 void Transceiver::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
+
     EV_INFO << "Packet casted" << endl;
 
     MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);
     PhysicalMessage* phyMsg = dynamic_cast<PhysicalMessage*>(msg);
+    SignalEndMessage* endMsg = dynamic_cast<SignalEndMessage*>(msg);
+    SignalStartMessage* startMsg = dynamic_cast<SignalStartMessage*>(msg);
 
+    handleEndTransmission(msg);
     handleMacMessage(MacMsg);
     handleCSRequest(csRequest);
     handlePhysicalMessage(phyMsg);
+    handleSignalEndMessage(endMsg);
+    handleSignalStartMessage(startMsg);
+
 }
 
+double Transceiver::findChannelPowerDB(){
+    //returns the current channel power in Db
+    double totalPowerRatio = 0.0;
 
+    auto i = currentTransmissions.begin();
+
+    while(i != currentTransmissions.end()){
+
+        double packetPowerDB = findPacketPowerDB(*i);
+        double packetPowerRatio = DBToRatio(packetPowerDB);
+        totalPowerRatio += packetPowerRatio;
+
+        i++;
+    }
+
+    return RatioToDB(totalPowerRatio);
+}
+
+double Transceiver::findPacketPowerDB(SignalStartMessage* msg){
+
+    double distance = findTransmitterDistance(msg);
+
+    double powerLossDb = findPowerLossDB(distance);
+
+    double messagePower = msg->getTransmitPowerDBm() - powerLossDb;
+    return messagePower;
+}
+
+double Transceiver::findTransmitterDistance(SignalStartMessage* msg){
+    int transmitterX = msg->getPositionX();
+    int transmitterY = msg->getPositionX();
+
+    int xDisplacement = abs(transmitterX - nodeXPosition);
+    int yDisplacement = abs(transmitterY - nodeYPosition);
+
+    //c^2 = a^2 + b^2 euclidian distance
+    double distance = sqrt(xDisplacement * xDisplacement + yDisplacement * yDisplacement);
+
+    return distance;
+}
+
+double Transceiver::findPowerLossDB(double distance){
+    //d0, see section 8.5 page 14 of spec
+    double referenceDistance = 1.0;
+    double powerLossRatio = 1.0;
+
+    if(distance < referenceDistance){
+        powerLossRatio = 1.0; //no power loss
+    }
+    else{
+        powerLossRatio = pow(distance, pathLossExponent);
+    }
+
+    double powerLossDb = RatioToDB(powerLossRatio);
+    return powerLossDb;
+}
+
+double Transceiver::DBToRatio(double num){
+    return pow(10, num/10);
+}
+
+double Transceiver::RatioToDB(double num){
+    return 10 * log10(num);
+}
 Transceiver::Transceiver() {
     // TODO Auto-generated constructor stub
 

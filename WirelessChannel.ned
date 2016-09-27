@@ -13,8 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
 
-    
-simple WirelessChannel{   
+simple WirelessChannel{
     gates:
         input in[];
         output out[];

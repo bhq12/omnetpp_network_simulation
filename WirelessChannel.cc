@@ -35,7 +35,7 @@ void WirelessChannel::handleMessage(cMessage* msg){
     {
         EV_INFO << "Packet duplicated physical" << endl;
 
-        cMessage *copy = msg->dup();
+        cMessage* copy = msg->dup();
         send(copy, "out", i);
     }
     EV_INFO << "Packet deleted phys" << endl;
