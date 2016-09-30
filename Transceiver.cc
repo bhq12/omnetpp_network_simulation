@@ -75,17 +75,6 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
 
 }
 
-void Transceiver::handlePhysicalMessage(PhysicalMessage* phyMsg){
-    if(phyMsg){
-        EV_INFO << "Packet decapsulated phys to mac" << endl;
-
-        MacMessage* MacMsg = dynamic_cast<MacMessage*>(phyMsg->decapsulate());
-        send(MacMsg, "macOut");
-        delete phyMsg;
-
-    }
-}
-
 void Transceiver::handleCSRequest(CSRequest* csRequest){
     //detect channel if channel busy, send back csResponse with result
     if(csRequest){
@@ -143,14 +132,12 @@ void Transceiver::handleMessage(cMessage* msg){
 
     MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);
-    PhysicalMessage* phyMsg = dynamic_cast<PhysicalMessage*>(msg);
     SignalEndMessage* endMsg = dynamic_cast<SignalEndMessage*>(msg);
     SignalStartMessage* startMsg = dynamic_cast<SignalStartMessage*>(msg);
 
     handleEndTransmission(msg);
     handleMacMessage(MacMsg);
     handleCSRequest(csRequest);
-    handlePhysicalMessage(phyMsg);
     handleSignalEndMessage(endMsg);
     handleSignalStartMessage(startMsg);
 

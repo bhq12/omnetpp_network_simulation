@@ -22,7 +22,6 @@
 #include "globals.h"
 #include "MACMessage_m.h"
 #include "AppMessage_m.h"
-#include "PhysicalMessage_m.h"
 #include "SignalStartMessage_m.h"
 #include "SignalEndMessage_m.h"
 #include "CSRequest_m.h"
@@ -44,7 +43,6 @@ public:
         virtual void handleMessage(cMessage* msg);
         virtual void handleCSRequest(CSRequest* csRequest);
         virtual void handleMacMessage(MacMessage* appMsg);
-        virtual void handlePhysicalMessage(PhysicalMessage* phyMsg);
         virtual void handleEndTransmission(cMessage* msg);
         virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
         virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
