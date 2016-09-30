@@ -101,8 +101,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
             //calculate the current channel signal power
             double channelPower = findChannelPowerDB();
 
-            //TODO: wait for carrier sense time delay
-            //schedule an event in the future simtime() + csdelay
+            wait(csTime);
 
             //decide if the channel is busy
             bool isBusy = channelPower > csThreshDBm;
