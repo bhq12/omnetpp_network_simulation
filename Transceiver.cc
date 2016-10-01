@@ -37,6 +37,7 @@ void Transceiver::initialize(){
 void Transceiver::handleMacMessage(MacMessage* MacMsg){
     if(MacMsg){
         SignalStartMessage* startMessage = new SignalStartMessage();
+        startMessage -> setTransmitPowerDBm(txPowerDBm);
         int packetLength = MacMsg -> getBitLength();
         delete MacMsg;
 
