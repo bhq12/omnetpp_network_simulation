@@ -59,7 +59,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
     } else if (strcmp("WAIT_OVER", name) == 0){
         delete msg;
 
-        bool isBusy = channelPower > csThreshDBm;\
+        bool isBusy = channelPower > csThreshDBm;
 
         EV_INFO << "in recv state, Channel is busy: " << isBusy << "." << endl;
 
@@ -72,7 +72,9 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
     if (startMsg){
-        delete startMsg;//TODO: want to add to current transmissions vector, then delete after stop is received
+        delete startMsg;
+
+        //TODO: want to add to current transmissions vector, then delete after stop is received
         //currentTransmissions.insert(currentTransmissions.begin(), startMsg)
         state = Receive;
     }
