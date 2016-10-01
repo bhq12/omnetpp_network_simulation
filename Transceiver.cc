@@ -56,6 +56,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
         send(endMessage, "channelOut");
+        //TODO: add status parameter to TransmissionConfirm packet, see 8.4 bullet pt 2
         send (new TransmissionConfirm(), "macOut");
         //change transceiver state to receive
         scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_WAIT"));
