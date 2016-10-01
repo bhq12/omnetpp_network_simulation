@@ -64,6 +64,7 @@ public:
         double noisePowerDBm;
         double turnAroundTime;
         double csTime;
+        double channelPower = 0;
 
         TransceiverState_t state;
 
