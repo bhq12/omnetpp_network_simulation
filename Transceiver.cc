@@ -35,15 +35,19 @@ void Transceiver::initialize(){
 }
 
 //TODO: implement turn-around time
-void Transceiver::handleMacMessage(MacMessage* MacMsg){
-    if(MacMsg){
+void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionRequest){
+    if(transmissionRequest){
         SignalStartMessage* startMessage = new SignalStartMessage();
         startMessage -> setTransmitPowerDBm(txPowerDBm);
-        int packetLength = MacMsg -> getBitLength();
-        delete MacMsg;
+        MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionRequest->decapsulate());
+        int packetLength = macMsg -> getBitLength();
+        delete transmissionRequest;
+        delete macMsg;
 
         state = Transmit;
         send(startMessage, "channelOut");
+        //TODO: implement transmission confirmation, probably need to do this on end transmission
+        //send (new TransmissionConfirm(), "macOut");
 
         scheduleAt(simTime() + (packetLength / bitRate), new cMessage("END_TRANSMISSION"));
     }
@@ -56,6 +60,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         SignalEndMessage* endMessage = new SignalEndMessage();
         send(endMessage, "channelOut");
         state = Receive;
+
     } else if (strcmp("WAIT_OVER", name) == 0){
         delete msg;
 
@@ -66,8 +71,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         CSResponse* response = new CSResponse();
         response -> setBusyChannel(isBusy);
         send(response, "macOut");
-        }
-
+    }
 }
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
@@ -134,13 +138,14 @@ void Transceiver::handleMessage(cMessage* msg){
 
     EV_INFO << "Packet casted" << endl;
 
-    MacMessage* MacMsg = dynamic_cast<MacMessage*>(msg);
+    TransmissionRequest* transmissionRequest = dynamic_cast<TransmissionRequest*>(msg);
     CSRequest* csRequest = dynamic_cast<CSRequest*>(msg);
     SignalEndMessage* endMsg = dynamic_cast<SignalEndMessage*>(msg);
     SignalStartMessage* startMsg = dynamic_cast<SignalStartMessage*>(msg);
 
+
     handleInternalSignals(msg);
-    handleMacMessage(MacMsg);
+    handleTransmissionRequest(transmissionRequest);
     handleCSRequest(csRequest);
     handleSignalEndMessage(endMsg);
     handleSignalStartMessage(startMsg);

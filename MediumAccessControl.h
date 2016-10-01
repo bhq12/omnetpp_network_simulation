@@ -21,6 +21,8 @@
 #include "MacMessage_m.h"
 #include "CSResponse_m.h"
 #include "CSRequest_m.h"
+#include "TransmissionRequest_m.h"
+#include "TransmissionConfirm_m.h"
 using namespace omnetpp;
 class MAC : public cSimpleModule {
     protected:

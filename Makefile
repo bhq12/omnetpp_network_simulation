@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for omnetpp_network_simulation
+# OMNeT++/OMNEST Makefile for assignment
 #
 # This file was generated with the command:
 #  opp_makemake -f --deep -O out
 #
 
 # Name of target to be created (-o option)
-TARGET = omnetpp_network_simulation$(EXE_SUFFIX)
+TARGET = assignment$(EXE_SUFFIX)
 
 # User interface (uncomment one) (-u option)
 USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
@@ -15,7 +15,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I.
+INCLUDE_PATH = -I. -Iresults
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -40,7 +40,9 @@ OBJS = \
     $O/CSResponse_m.o \
     $O/MacMessage_m.o \
     $O/SignalEndMessage_m.o \
-    $O/SignalStartMessage_m.o
+    $O/SignalStartMessage_m.o \
+    $O/TransmissionConfirm_m.o \
+    $O/TransmissionRequest_m.o
 
 # Message files
 MSGFILES = \
@@ -49,7 +51,9 @@ MSGFILES = \
     CSResponse.msg \
     MacMessage.msg \
     SignalEndMessage.msg \
-    SignalStartMessage.msg
+    SignalStartMessage.msg \
+    TransmissionConfirm.msg \
+    TransmissionRequest.msg
 
 # SM files
 SMFILES =
@@ -131,15 +135,16 @@ smheaders: $(SMFILES:.sm=_sm.h)
 clean:
 	$(qecho) Cleaning...
 	$(Q)-rm -rf $O
-	$(Q)-rm -f omnetpp_network_simulation omnetpp_network_simulation.exe libomnetpp_network_simulation.so libomnetpp_network_simulation.a libomnetpp_network_simulation.dll libomnetpp_network_simulation.dylib
+	$(Q)-rm -f assignment assignment.exe libassignment.so libassignment.a libassignment.dll libassignment.dylib
 	$(Q)-rm -f ./*_m.cc ./*_m.h ./*_sm.cc ./*_sm.h
+	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc results/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/AppMessage_m.o: AppMessage_m.cc \
@@ -155,7 +160,9 @@ $O/MediumAccessControl.o: MediumAccessControl.cc \
 	CSRequest_m.h \
 	CSResponse_m.h \
 	MacMessage_m.h \
-	MediumAccessControl.h
+	MediumAccessControl.h \
+	TransmissionConfirm_m.h \
+	TransmissionRequest_m.h
 $O/PacketGenerator.o: PacketGenerator.cc \
 	AppMessage_m.h \
 	PacketGenerator.h
@@ -172,7 +179,13 @@ $O/Transceiver.o: Transceiver.cc \
 	SignalEndMessage_m.h \
 	SignalStartMessage_m.h \
 	Transceiver.h \
+	TransmissionConfirm_m.h \
+	TransmissionRequest_m.h \
 	globals.h
+$O/TransmissionConfirm_m.o: TransmissionConfirm_m.cc \
+	TransmissionConfirm_m.h
+$O/TransmissionRequest_m.o: TransmissionRequest_m.cc \
+	TransmissionRequest_m.h
 $O/WirelessChannel.o: WirelessChannel.cc \
 	AppMessage_m.h \
 	MacMessage_m.h \

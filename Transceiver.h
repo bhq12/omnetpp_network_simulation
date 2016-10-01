@@ -26,6 +26,8 @@
 #include "SignalEndMessage_m.h"
 #include "CSRequest_m.h"
 #include "CSResponse_m.h"
+#include "TransmissionRequest_m.h"
+#include "TransmissionConfirm_m.h"
 
 using namespace omnetpp;
 
@@ -42,8 +44,8 @@ public:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
         virtual void handleCSRequest(CSRequest* csRequest);
-        virtual void handleMacMessage(MacMessage* appMsg);
         virtual void handleInternalSignals(cMessage* msg);
+        virtual void handleTransmissionRequest(TransmissionRequest* appMsg);
         virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
         virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
         virtual double findChannelPowerDB();
