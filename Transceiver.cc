@@ -43,9 +43,10 @@ void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionReq
         delete transmissionRequest;
         delete macMsg;
 
-        state = Transmit;
         send(startMessage, "channelOut");
         scheduleAt(simTime() + (packetLength / bitRate), new cMessage("END_TRANSMISSION"));
+        //change transceiver state to transmit
+        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_WAIT"));
     }
 }
 
@@ -56,9 +57,11 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         SignalEndMessage* endMessage = new SignalEndMessage();
         send(endMessage, "channelOut");
         send (new TransmissionConfirm(), "macOut");
-        state = Receive;
+        //change transceiver state to receive
+        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_WAIT"));
 
-    } else if (strcmp("WAIT_OVER", name) == 0){
+    }
+    else if (strcmp("CARRIER_SENSE_WAIT", name) == 0){
         delete msg;
 
         bool isBusy = channelPower > csThreshDBm;
@@ -69,6 +72,15 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         response -> setBusyChannel(isBusy);
         send(response, "macOut");
     }
+    else if (strcmp("TURNAROUND_WAIT", name) == 0){
+        //change transceiver state after waiting for turnaround time
+        if(state == Receive){
+            state = Transmit;
+        }
+        else{
+            state = Receive;
+        }
+    }
 }
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
@@ -77,14 +89,12 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
 
         //TODO: want to add to current transmissions vector, then delete after stop is received
         //currentTransmissions.insert(currentTransmissions.begin(), startMsg)
-        state = Receive;
     }
 }
 
 void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
     if (endMsg){
         delete endMsg;
-        state = Receive;
     }
 
 }
@@ -116,7 +126,7 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
             channelPower = findChannelPowerDB();
 
 
-            scheduleAt(simTime() + csTime, new cMessage("WAIT_OVER"));
+            scheduleAt(simTime() + csTime, new cMessage("CARRIER_SENSE_WAIT"));
 
         }
         else{
