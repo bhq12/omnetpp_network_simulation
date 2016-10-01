@@ -29,6 +29,13 @@ void MAC::handleAppMessage(AppMessage* appMsg){
     }
 }
 
+void MAC::handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm){
+    if(transmissionConfirm){
+        //TODO: probably need to do something here? Or maybe do something if no confirmation is received
+        delete transmissionConfirm;
+    }
+}
+
 void MAC::handleMacMessage(MacMessage* macMsg){
     if(macMsg){
         //delete macMsg;
@@ -83,11 +90,13 @@ void MAC::handleMessage(cMessage* msg){
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
     MacMessage* macMsg = dynamic_cast<MacMessage*>(msg);
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
+    TransmissionConfirm* transmissionConfirm = dynamic_cast<TransmissionConfirm*>(msg);
 
 
     handleAppMessage(appMsg);
     handleMacMessage(macMsg);
     handleCSResponse(csResponse);
+    handleTransmissionConfirm(transmissionConfirm);
 
     if(buffer.size() > 0){
         //perform carrier sense in order to send packets

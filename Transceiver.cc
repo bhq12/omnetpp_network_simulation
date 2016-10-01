@@ -58,6 +58,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
         send(endMessage, "channelOut");
+        send (new TransmissionConfirm(), "macOut");
         state = Receive;
 
     } else if (strcmp("WAIT_OVER", name) == 0){
@@ -81,7 +82,6 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
         //currentTransmissions.insert(currentTransmissions.begin(), startMsg)
         state = Receive;
     }
-
 }
 
 void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
