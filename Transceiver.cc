@@ -16,7 +16,6 @@
 #include <Transceiver.h>
 
 Define_Module(Transceiver);
-double channelPower = 0;
 
 void Transceiver::initialize(){
     //this is called at the beginning of the simulation
