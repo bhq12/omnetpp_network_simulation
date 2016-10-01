@@ -45,9 +45,6 @@ void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionReq
 
         state = Transmit;
         send(startMessage, "channelOut");
-        //TODO: implement transmission confirmation, probably need to do this on end transmission
-        //send (new TransmissionConfirm(), "macOut");
-
         scheduleAt(simTime() + (packetLength / bitRate), new cMessage("END_TRANSMISSION"));
     }
 }
