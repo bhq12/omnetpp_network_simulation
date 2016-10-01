@@ -16,6 +16,7 @@
 #include <Transceiver.h>
 
 Define_Module(Transceiver);
+double channelPower = 0;
 
 void Transceiver::initialize(){
     //this is called at the beginning of the simulation
@@ -48,14 +49,24 @@ void Transceiver::handleMacMessage(MacMessage* MacMsg){
     }
 }
 
-void Transceiver::handleEndTransmission(cMessage* msg){
+void Transceiver::handleInternalSignals(cMessage* msg){
     const char* name = msg->getName();
     if (strcmp("END_TRANSMISSION", name) == 0){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
         send(endMessage, "channelOut");
         state = Receive;
-    }
+    } else if (strcmp("WAIT_OVER", name) == 0){
+        delete msg;
+
+        bool isBusy = channelPower > csThreshDBm;\
+
+        EV_INFO << "in recv state, Channel is busy: " << isBusy << "." << endl;
+
+        CSResponse* response = new CSResponse();
+        response -> setBusyChannel(isBusy);
+        send(response, "macOut");
+        }
 
 }
 
@@ -100,17 +111,10 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
 
 
             //calculate the current channel signal power
-            double channelPower = findChannelPowerDB();
+            channelPower = findChannelPowerDB();
 
-            wait(csTime);
 
-            //decide if the channel is busy
-            bool isBusy = channelPower > csThreshDBm;
-            EV_INFO << "in recv state, Channel is busy: " << isBusy << "." << endl;
-
-            CSResponse* response = new CSResponse();
-            response -> setBusyChannel(isBusy);
-            send(response, "macOut");
+            scheduleAt(simTime() + csTime, new cMessage("WAIT_OVER"));
 
         }
         else{
@@ -135,7 +139,7 @@ void Transceiver::handleMessage(cMessage* msg){
     SignalEndMessage* endMsg = dynamic_cast<SignalEndMessage*>(msg);
     SignalStartMessage* startMsg = dynamic_cast<SignalStartMessage*>(msg);
 
-    handleEndTransmission(msg);
+    handleInternalSignals(msg);
     handleMacMessage(MacMsg);
     handleCSRequest(csRequest);
     handleSignalEndMessage(endMsg);

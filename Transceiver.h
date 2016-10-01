@@ -43,7 +43,7 @@ public:
         virtual void handleMessage(cMessage* msg);
         virtual void handleCSRequest(CSRequest* csRequest);
         virtual void handleMacMessage(MacMessage* appMsg);
-        virtual void handleEndTransmission(cMessage* msg);
+        virtual void handleInternalSignals(cMessage* msg);
         virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
         virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
         virtual double findChannelPowerDB();
