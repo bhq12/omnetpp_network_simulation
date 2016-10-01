@@ -74,6 +74,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
     }
     else if (strcmp("TURNAROUND_WAIT", name) == 0){
         //change transceiver state after waiting for turnaround time
+        delete msg;
         if(state == Receive){
             state = Transmit;
         }
