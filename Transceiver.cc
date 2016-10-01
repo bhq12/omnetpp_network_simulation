@@ -31,22 +31,22 @@ void Transceiver::initialize(){
 
     nodeXPosition = getParentModule()->par("nodeXPosition");
     nodeYPosition = getParentModule()->par("nodeYPosition");
+    channelPower  = 0;
+    latestPacketLength = 0;
 }
 
 //TODO: implement turn-around time
 void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionRequest){
     if(transmissionRequest){
-        SignalStartMessage* startMessage = new SignalStartMessage();
-        startMessage -> setTransmitPowerDBm(txPowerDBm);
         MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionRequest->decapsulate());
-        int packetLength = macMsg -> getBitLength();
+        latestPacketLength = macMsg -> getBitLength();
+
+        //change transceiver state then wait turnaround time before continuing with transmission
+        state = Transmit;
+        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_TRANSMIT_START_WAIT"));
+
         delete transmissionRequest;
         delete macMsg;
-
-        send(startMessage, "channelOut");
-        scheduleAt(simTime() + (packetLength / bitRate), new cMessage("END_TRANSMISSION"));
-        //change transceiver state to transmit
-        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_WAIT"));
     }
 }
 
@@ -59,7 +59,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         //TODO: add status parameter to TransmissionConfirm packet, see 8.4 bullet pt 2
         send (new TransmissionConfirm(), "macOut");
         //change transceiver state to receive
-        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_WAIT"));
+        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_TRANSMIT_FINISHED_WAIT"));
 
     }
     else if (strcmp("CARRIER_SENSE_WAIT", name) == 0){
@@ -73,15 +73,22 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         response -> setBusyChannel(isBusy);
         send(response, "macOut");
     }
-    else if (strcmp("TURNAROUND_WAIT", name) == 0){
+    else if (strcmp("TURNAROUND_TRANSMIT_FINISHED_WAIT", name) == 0){
         //change transceiver state after waiting for turnaround time
         delete msg;
-        if(state == Receive){
-            state = Transmit;
-        }
-        else{
-            state = Receive;
-        }
+
+        state = Receive;
+
+    }
+    else if (strcmp("TURNAROUND_TRANSMIT_START_WAIT", name) == 0){
+        //start tramsission after waiting for the state turnaround time
+        delete msg;
+        SignalStartMessage* startMessage = new SignalStartMessage();
+        startMessage -> setTransmitPowerDBm(txPowerDBm);
+        send(startMessage, "channelOut");
+        scheduleAt(simTime() + (latestPacketLength / bitRate), new cMessage("END_TRANSMISSION"));
+
+
     }
 }
 
@@ -107,19 +114,6 @@ void Transceiver::handleCSRequest(CSRequest* csRequest){
         EV_INFO << "Packet deeleted request" << endl;
 
         delete csRequest;
-
-
-        //TEMPORARY for testing MAC
-        //
-        //
-        //EV_INFO << "Packet created reponse" << endl;
-
-        //CSResponse* response = new CSResponse();
-        //response -> setBusyChannel(false);
-        //send(response, "macOut");
-        //
-        //
-        //TEMPORARY
 
         if(state == Receive){
 

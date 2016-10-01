@@ -64,13 +64,14 @@ public:
         double noisePowerDBm;
         double turnAroundTime;
         double csTime;
-        double channelPower = 0;
+        double channelPower;
 
         TransceiverState_t state;
 
         std::vector<SignalStartMessage*> currentTransmissions;
         int nodeXPosition;
         int nodeYPosition;
+        int latestPacketLength;
 };
 
 #endif /* TRANSCEIVER_H_ */
