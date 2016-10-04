@@ -105,7 +105,20 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
     if (startMsg){
-        currentTransmissions.insert(currentTransmissions.begin(), startMsg);
+        //TODO: according to spec: when receiving a signal start msg, extract the ID field and check whether it
+        //equals the ID field of any of the start messages stored in the current transmissions list. If so,
+        //print an error message and abort the program. See section 8.5 paragraph 2
+        if(currentTransmissions.size() == 0){
+            currentTransmissions.insert(currentTransmissions.begin(), startMsg);
+        }
+        else{
+            //other nodes already transmitting, collision has occured
+            int i;
+            for(i = 0; i < currentTransmissions.size(); i++){
+                SignalStartMessage* startMsg = currentTransmissions[i];
+                startMsg->setCollidedFlag(true);
+            }
+        }
     }
 }
 
