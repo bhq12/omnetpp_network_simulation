@@ -92,6 +92,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         startMessage -> encapsulate(nextTransmission);
         startMessage -> setTransmitPowerDBm(txPowerDBm);
         startMessage -> setIdentifier(seqNo);
+        startMessage -> setCollidedFlag(false);
         currentTransmissions.insert(currentTransmissions.begin(), startMessage);
 
         seqNo++;

@@ -17,4 +17,5 @@ packet SignalStartMessage{
     int positionY;
     int transmitPowerDBm;
     int identifier;
+    bool collidedFlag;
 }
