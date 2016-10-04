@@ -42,6 +42,9 @@ void WirelessChannel::handleMessage(cMessage* msg){
             send(copy, "out", i);
         }
     }
+    if(dynamic_cast<SignalEndMessage*>(msg)){
+        delete msg;
+    }
     EV_INFO << "Packet deleted" << endl;
 }
 
