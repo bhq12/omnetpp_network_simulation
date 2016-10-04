@@ -39,15 +39,20 @@ void Transceiver::initialize(){
 //TODO: implement turn-around time
 void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionRequest){
     if(transmissionRequest){
-        MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionRequest->decapsulate());
-        //latestPacketLength = macMsg -> getBitLength();
-        nextTransmission = macMsg;
+        if(state == Receive){
+            MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionRequest->decapsulate());
+            //latestPacketLength = macMsg -> getBitLength();
+            nextTransmission = macMsg;
 
-        //change transceiver state then wait turnaround time before continuing with transmission
-        state = Transmit;
-        scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_TRANSMIT_START_WAIT"));
+            //change transceiver state then wait turnaround time before continuing with transmission
+            state = Transmit;
+            scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_TRANSMIT_START_WAIT"));
 
-        delete transmissionRequest;
+            delete transmissionRequest;
+        }
+        else if(state == Transmit){
+            //TODO: The MAC with CSMA should ensure we never reach this state, but we should prepare for it in case of error
+        }
     }
 }
 
@@ -119,8 +124,6 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
                 startMsg->setCollidedFlag(true);
             }
         }
-
-
     }
 }
 
