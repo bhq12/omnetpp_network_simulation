@@ -33,6 +33,7 @@ void Transceiver::initialize(){
     nodeYPosition = getParentModule()->par("nodeYPosition");
     channelPower  = 0;
     latestPacketLength = 0;
+    seqNo = 0;
 }
 
 //TODO: implement turn-around time
@@ -55,6 +56,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
     if (strcmp("END_TRANSMISSION", name) == 0){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
+        endMessage -> setIdentifier(seqNo - 1);
         send(endMessage, "channelOut");
         //TODO: add status parameter to TransmissionConfirm packet, see 8.4 bullet pt 2
         send (new TransmissionConfirm(), "macOut");
@@ -81,10 +83,12 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 
     }
     else if (strcmp("TURNAROUND_TRANSMIT_START_WAIT", name) == 0){
-        //start tramsission after waiting for the state turnaround time
+        //start transmission after waiting for the state turnaround time
         delete msg;
         SignalStartMessage* startMessage = new SignalStartMessage();
         startMessage -> setTransmitPowerDBm(txPowerDBm);
+        startMessage -> setIdentifier(seqNo);
+        seqNo++;
         send(startMessage, "channelOut");
         scheduleAt(simTime() + (latestPacketLength / bitRate), new cMessage("END_TRANSMISSION"));
 
@@ -94,18 +98,23 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
     if (startMsg){
-        delete startMsg;
-
-        //TODO: want to add to current transmissions vector, then delete after stop is received
-        //currentTransmissions.insert(currentTransmissions.begin(), startMsg)
+        currentTransmissions.insert(currentTransmissions.begin(), startMsg);
     }
 }
 
 void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
     if (endMsg){
+        int i;
+        for(i = 0; i < currentTransmissions.size(); i++){
+            if (currentTransmissions[i]->getIdentifier() == endMsg->getIdentifier()){
+                SignalStartMessage* start = currentTransmissions[i];
+                currentTransmissions.erase(currentTransmissions.begin()+i-1);
+                delete start;
+            }
+        }
         delete endMsg;
-    }
 
+    }
 }
 
 void Transceiver::handleCSRequest(CSRequest* csRequest){

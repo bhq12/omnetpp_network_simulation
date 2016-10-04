@@ -16,4 +16,5 @@ packet SignalStartMessage{
 	int positionX;
     int positionY;
     int transmitPowerDBm;
+    int identifier;
 }
