@@ -20,6 +20,8 @@
 #include <omnetpp.h>
 #include "AppMessage_m.h"
 #include "MacMessage_m.h"
+#include "SignalStartMessage_m.h"
+#include "SignalEndMessage_m.h"
 
 using namespace omnetpp;
 
@@ -30,6 +32,7 @@ class WirelessChannel : public cSimpleModule {
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
+        virtual int findSenderId(cMessage* msg);
 };
 
 #endif /* WIRELESSCHANNEL_H_ */

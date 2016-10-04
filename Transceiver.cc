@@ -40,14 +40,14 @@ void Transceiver::initialize(){
 void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionRequest){
     if(transmissionRequest){
         MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionRequest->decapsulate());
-        latestPacketLength = macMsg -> getBitLength();
+        //latestPacketLength = macMsg -> getBitLength();
+        nextTransmission = macMsg;
 
         //change transceiver state then wait turnaround time before continuing with transmission
         state = Transmit;
         scheduleAt(simTime() + turnAroundTime, new cMessage("TURNAROUND_TRANSMIT_START_WAIT"));
 
         delete transmissionRequest;
-        delete macMsg;
     }
 }
 
@@ -57,6 +57,9 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
         endMessage -> setIdentifier(seqNo - 1);
+        int id = getParentModule()->par("nodeIndetifier");
+        endMessage -> setSenderId(id);
+        eraseAssociatedStartMessageFromList(endMessage);
         send(endMessage, "channelOut");
         //TODO: add status parameter to TransmissionConfirm packet, see 8.4 bullet pt 2
         send (new TransmissionConfirm(), "macOut");
@@ -86,11 +89,14 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         //start transmission after waiting for the state turnaround time
         delete msg;
         SignalStartMessage* startMessage = new SignalStartMessage();
+        startMessage -> encapsulate(nextTransmission);
         startMessage -> setTransmitPowerDBm(txPowerDBm);
         startMessage -> setIdentifier(seqNo);
+        currentTransmissions.insert(currentTransmissions.begin(), startMessage);
+
         seqNo++;
         send(startMessage, "channelOut");
-        scheduleAt(simTime() + (latestPacketLength / bitRate), new cMessage("END_TRANSMISSION"));
+        scheduleAt(simTime() + ((nextTransmission -> getBitLength())/ bitRate), new cMessage("END_TRANSMISSION"));
 
 
     }
@@ -104,16 +110,26 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
 
 void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
     if (endMsg){
-        int i;
-        for(i = 0; i < currentTransmissions.size(); i++){
-            if (currentTransmissions[i]->getIdentifier() == endMsg->getIdentifier()){
-                SignalStartMessage* start = currentTransmissions[i];
-                currentTransmissions.erase(currentTransmissions.begin()+i-1);
-                delete start;
-            }
-        }
+        eraseAssociatedStartMessageFromList(endMsg);
         delete endMsg;
 
+    }
+}
+
+
+void Transceiver::eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg){
+    if(endMsg){
+        int i;
+        for(i = 0; i < currentTransmissions.size(); i++){
+            int endMessageId = endMsg->getIdentifier();
+            SignalStartMessage* startMsg = currentTransmissions[i];
+            int id = startMsg->getIdentifier();
+            if (id == endMessageId){
+                currentTransmissions.erase(currentTransmissions.begin()+i-1);
+                //TODO: send start message to lower layers to be decapsulated
+                delete startMsg;
+            }
+        }
     }
 }
 

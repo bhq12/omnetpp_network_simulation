@@ -48,6 +48,7 @@ public:
         virtual void handleTransmissionRequest(TransmissionRequest* appMsg);
         virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
         virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
+        virtual void eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg);
         virtual double findChannelPowerDB();
         virtual double DBToRatio(double num);
         virtual double RatioToDB(double num);
@@ -73,6 +74,7 @@ public:
         int nodeXPosition;
         int nodeYPosition;
         int latestPacketLength;
+        MacMessage* nextTransmission;
 };
 
 #endif /* TRANSCEIVER_H_ */

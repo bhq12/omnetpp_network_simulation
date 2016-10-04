@@ -14,5 +14,6 @@
 //
 packet SignalEndMessage {
     int identifier;
+    int senderId;
 }
     
