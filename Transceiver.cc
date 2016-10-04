@@ -127,6 +127,8 @@ void Transceiver::eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg){
             if (id == endMessageId){
                 currentTransmissions.erase(currentTransmissions.begin()+i-1);
                 //TODO: send start message to lower layers to be decapsulated
+                MacMessage* macMsg = static_cast<MacMessage*>(startMsg->decapsulate());
+                send(macMsg, "macOut");
                 delete startMsg;
             }
         }
