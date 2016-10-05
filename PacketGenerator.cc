@@ -20,9 +20,11 @@ Define_Module(PacketGenerator);
 
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
+
     EV_INFO << "Packet created (request new)" << endl;
     cMessage* msg = new cMessage("NEW_MSG");
-    scheduleAt(simTime(), msg);
+    double delay = exponential(packetDelayDistribution);
+    scheduleAt(simTime() + delay, msg);
 
 }
 
@@ -42,7 +44,9 @@ void PacketGenerator::handleMessage(cMessage* msg){
         EV_INFO << "Packet created (request new)" << endl;
 
         cMessage* newMsg = new cMessage("NEW_MSG");
-        scheduleAt(simTime() + 1, newMsg);
+        double delay = exponential(packetDelayDistribution);
+
+        scheduleAt(simTime() + delay, newMsg);
     }
     EV_INFO << "Packet deleted (handled message)" << endl;
     delete msg;
