@@ -169,6 +169,7 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
                 //drop the packet
                 errorCount++;
                 EV_INFO << "erroneous packet dropped" << endl;
+                delete macMsg;
             }
             else{
                 TransmissionIndication* transmissionIndication = new TransmissionIndication();
