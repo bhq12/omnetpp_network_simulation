@@ -34,6 +34,7 @@ void Transceiver::initialize(){
     channelPower  = 0;
     latestPacketLength = 0;
     seqNo = 0;
+    collidedCount = 0;
 }
 
 //TODO: implement turn-around time
@@ -108,11 +109,22 @@ void Transceiver::handleInternalSignals(cMessage* msg){
     }
 }
 
+void Transceiver::refreshDisplay() const
+{
+    char buf[40];
+    sprintf(buf, "Collided: %ld       ", collidedCount);
+    getDisplayString().setTagArg("t", 0, buf);
+}
+
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
     if (startMsg){
         //TODO: according to spec: when receiving a signal start msg, extract the ID field and check whether it
         //equals the ID field of any of the start messages stored in the current transmissions list. If so,
         //print an error message and abort the program. See section 8.5 paragraph 2
+        if(startMsg->getCollidedFlag() == true){
+            collidedCount++;
+        }
+
         bool hasCollided = currentTransmissions.size() != 0;
 
         currentTransmissions.insert(currentTransmissions.begin(), startMsg);

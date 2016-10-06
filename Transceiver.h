@@ -67,6 +67,7 @@ public:
         double csTime;
         double channelPower;
         int seqNo;
+        long collidedCount;
 
         TransceiverState_t state;
 
@@ -75,6 +76,7 @@ public:
         int nodeYPosition;
         int latestPacketLength;
         MacMessage* nextTransmission;
+        void refreshDisplay() const;
 };
 
 #endif /* TRANSCEIVER_H_ */

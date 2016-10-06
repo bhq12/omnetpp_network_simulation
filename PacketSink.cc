@@ -19,12 +19,21 @@ Define_Module(PacketSink);
 
 void PacketSink::initialize(){
     //just chill
-
+    numReceived = 0;
+    WATCH(numReceived);
 }
 
 void PacketSink::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
+    numReceived++;
     delete msg;
+}
+
+void PacketSink::refreshDisplay() const
+{
+    char buf[40];
+    sprintf(buf, "rcvd: %ld       ", numReceived);
+    getDisplayString().setTagArg("t", 0, buf);
 }
 
 

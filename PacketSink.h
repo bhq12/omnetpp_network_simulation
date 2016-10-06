@@ -25,10 +25,13 @@ class PacketSink : public cSimpleModule {
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage* msg);
+        long numReceived;
     public:
         PacketSink();
         virtual ~PacketSink();
         char logFileName[];
+        void refreshDisplay() const;
+
 };
 
 #endif /* PACKETSINK_H_ */
