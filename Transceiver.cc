@@ -65,7 +65,8 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         endMessage -> setIdentifier(seqNo - 1);
         int id = getParentModule()->par("nodeIndetifier");
         endMessage -> setSenderId(id);
-        eraseAssociatedStartMessageFromList(endMessage);
+        SignalStartMessage* startMsg = findAssociatedTransmission(endMessage);
+        delete startMsg;//transmission has ended, delete the message
         send(endMessage, "channelOut");
         //TODO: add status parameter to TransmissionConfirm packet, see 8.4 bullet pt 2
         send (new TransmissionConfirm(), "macOut");
@@ -141,14 +142,53 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
 
 void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
     if (endMsg){
-        eraseAssociatedStartMessageFromList(endMsg);
+        SignalStartMessage* startMsg = findAssociatedTransmission(endMsg);
+
+
+        if(startMsg -> getCollidedFlag()){
+            //drop the packet
+            EV_INFO << "collided packet dropped" << endl;
+
+        }
+        else{
+            MacMessage* macMsg = static_cast<MacMessage*>(startMsg->decapsulate());
+
+            double receivedPower = findPacketPowerDB(startMsg);
+
+            double bitRateDB = ratioToDB(bitRate);
+
+            double Eb_N0 = receivedPower - (noisePowerDBm + bitRateDB);
+
+            double snr = DBToRatio(Eb_N0);
+
+            double bitErrorRate = erfc(sqrt(2 * snr));
+            double packetClearRate = pow((1 - bitErrorRate), macMsg->getBitLength());
+            double packetErrorRate = 1 - packetClearRate;
+
+            //draw a random number to simulate whether the packet is erroneous
+            double packetErrorIndicator = uniform(0,1);
+
+            if(packetErrorIndicator < packetErrorRate){
+                //drop the packet
+                EV_INFO << "erroneous packet dropped" << endl;
+            }
+            else{
+
+                send(macMsg, "macOut");
+            }
+
+
+        }
+
+
+        delete startMsg;
         delete endMsg;
 
     }
 }
 
 
-void Transceiver::eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg){
+SignalStartMessage* Transceiver::findAssociatedTransmission(SignalEndMessage* endMsg){
     if(endMsg){
         int i;
         for(i = 0; i < currentTransmissions.size(); i++){
@@ -157,10 +197,7 @@ void Transceiver::eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg){
             int id = startMsg->getIdentifier();
             if (id == endMessageId){
                 currentTransmissions.erase(currentTransmissions.begin()+i-1);
-
-                MacMessage* macMsg = static_cast<MacMessage*>(startMsg->decapsulate());
-                send(macMsg, "macOut");
-                delete startMsg;
+                return startMsg;
             }
         }
     }
@@ -229,7 +266,7 @@ double Transceiver::findChannelPowerDB(){
         i++;
     }
 
-    return RatioToDB(totalPowerRatio);
+    return ratioToDB(totalPowerRatio);
 }
 
 double Transceiver::findPacketPowerDB(SignalStartMessage* msg){
@@ -267,7 +304,7 @@ double Transceiver::findPowerLossDB(double distance){
         powerLossRatio = pow(distance, pathLossExponent);
     }
 
-    double powerLossDb = RatioToDB(powerLossRatio);
+    double powerLossDb = ratioToDB(powerLossRatio);
     return powerLossDb;
 }
 
@@ -275,7 +312,7 @@ double Transceiver::DBToRatio(double num){
     return pow(10, num/10);
 }
 
-double Transceiver::RatioToDB(double num){
+double Transceiver::ratioToDB(double num){
     return 10 * log10(num);
 }
 Transceiver::Transceiver() {

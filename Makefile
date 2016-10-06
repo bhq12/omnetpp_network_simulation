@@ -1,12 +1,12 @@
 #
-# OMNeT++/OMNEST Makefile for omnetpp_network_simulation
+# OMNeT++/OMNEST Makefile for assignment
 #
 # This file was generated with the command:
 #  opp_makemake -f --deep -O out
 #
 
 # Name of target to be created (-o option)
-TARGET = omnetpp_network_simulation$(EXE_SUFFIX)
+TARGET = assignment$(EXE_SUFFIX)
 
 # User interface (uncomment one) (-u option)
 USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
@@ -135,7 +135,7 @@ smheaders: $(SMFILES:.sm=_sm.h)
 clean:
 	$(qecho) Cleaning...
 	$(Q)-rm -rf $O
-	$(Q)-rm -f omnetpp_network_simulation omnetpp_network_simulation.exe libomnetpp_network_simulation.so libomnetpp_network_simulation.a libomnetpp_network_simulation.dll libomnetpp_network_simulation.dylib
+	$(Q)-rm -f assignment assignment.exe libassignment.so libassignment.a libassignment.dll libassignment.dylib
 	$(Q)-rm -f ./*_m.cc ./*_m.h ./*_sm.cc ./*_sm.h
 	$(Q)-rm -f results/*_m.cc results/*_m.h results/*_sm.cc results/*_sm.h
 

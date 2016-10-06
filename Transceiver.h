@@ -48,10 +48,10 @@ public:
         virtual void handleTransmissionRequest(TransmissionRequest* appMsg);
         virtual void handleSignalStartMessage(SignalStartMessage* startMsg);
         virtual void handleSignalEndMessage(SignalEndMessage* endMsg);
-        virtual void eraseAssociatedStartMessageFromList(SignalEndMessage* endMsg);
+        virtual SignalStartMessage* findAssociatedTransmission(SignalEndMessage* endMsg);
         virtual double findChannelPowerDB();
         virtual double DBToRatio(double num);
-        virtual double RatioToDB(double num);
+        virtual double ratioToDB(double num);
         virtual double findPacketPowerDB(SignalStartMessage* msg);
         virtual double findTransmitterDistance(SignalStartMessage* msg);
         virtual double findPowerLossDB(double distance);
