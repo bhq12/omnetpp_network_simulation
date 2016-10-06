@@ -273,7 +273,7 @@ double Transceiver::findPacketPowerDB(SignalStartMessage* msg){
 
 double Transceiver::findTransmitterDistance(SignalStartMessage* msg){
     int transmitterX = msg->getPositionX();
-    int transmitterY = msg->getPositionX();
+    int transmitterY = msg->getPositionY();
 
     int xDisplacement = abs(transmitterX - nodeXPosition);
     int yDisplacement = abs(transmitterY - nodeYPosition);
