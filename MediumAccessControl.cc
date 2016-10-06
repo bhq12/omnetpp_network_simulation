@@ -65,9 +65,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
 
             if(backoffs < maxBackoffs){
                 double waitTime = exponential(backoffDistribution);
-
-                scheduleAt(simTime() + waitTime, new cMessage("retry carrier sense"));
-
+                scheduleAt(simTime() + waitTime, new cMessage("RETRY_CARRIER_SENSE"));
 
             }
             else{
@@ -87,6 +85,18 @@ void MAC::handleCSResponse(CSResponse* csResponse){
 
 }
 
+void MAC::handleInternalSignals(cMessage* msg){
+    const char* name = msg->getName();
+    if (strcmp("RETRY_CARRIER_SENSE", name) == 0){
+
+        CSRequest* csRequest = new CSRequest();
+        send(csRequest, "transceiverOut");
+        delete msg;
+
+
+    }
+}
+
 void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
 
@@ -95,22 +105,13 @@ void MAC::handleMessage(cMessage* msg){
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
     TransmissionConfirm* transmissionConfirm = dynamic_cast<TransmissionConfirm*>(msg);
 
-
+    handleInternalSignals(msg);
     handleAppMessage(appMsg);
     handleTransmissionIndication(transmissionIndication);
     handleCSResponse(csResponse);
     handleTransmissionConfirm(transmissionConfirm);
 
-    if(buffer.size() > 0){
-        //perform carrier sense in order to send packets
-        EV_INFO << "Packet created (request)" << endl;
 
-        CSRequest* csRequest = new CSRequest();
-        send(csRequest, "transceiverOut");
-    }
-    else{
-        //wait for new packets to arrive from generator
-    }
 }
 
 void MAC::transmit(void){
@@ -134,6 +135,9 @@ bool MAC::addToBuffer(AppMessage* msg){
     //returns true if packet successfully buffered, false if dropped
     if(buffer.size() < bufferSize){
         buffer.push(msg);
+
+        CSRequest* csRequest = new CSRequest();
+        send(csRequest, "transceiverOut");
         return true;
     }
     else{

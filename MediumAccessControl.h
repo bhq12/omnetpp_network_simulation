@@ -35,6 +35,7 @@ class MAC : public cSimpleModule {
         virtual void handleCSResponse(CSResponse* csResponse);
         virtual void handleTransmissionIndication(TransmissionIndication* transmissionIndication);
         virtual void handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm);
+        virtual void handleInternalSignals(cMessage* msg);
     public:
         MAC();
         virtual ~MAC();

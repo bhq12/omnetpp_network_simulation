@@ -98,6 +98,9 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         int id = getParentModule()->par("nodeIndetifier");
         startMessage -> setSenderId(id);
         startMessage -> setCollidedFlag(false);
+        startMessage -> setPositionX(getParentModule()->par("nodeXPosition"));
+        startMessage -> setPositionY(getParentModule()->par("nodeYPosition"));
+        startMessage -> setTransmitPowerDBm(txPowerDBm);
         currentTransmissions.insert(currentTransmissions.begin(), startMessage);
         send(startMessage, "channelOut");
         scheduleAt(simTime() + ((nextTransmission -> getBitLength())/ bitRate), new cMessage("END_TRANSMISSION"));
@@ -107,7 +110,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 void Transceiver::refreshDisplay() const
 {
     char buf[40];
-    sprintf(buf, "Collided: %ld       ", collidedCount);
+    sprintf(buf, "Errors: %ld       ", collidedCount);
     getDisplayString().setTagArg("t", 0, buf);
 }
 
@@ -161,6 +164,7 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
 
             if(packetErrorIndicator < packetErrorRate){
                 //drop the packet
+                collidedCount++;
                 EV_INFO << "erroneous packet dropped" << endl;
             }
             else{

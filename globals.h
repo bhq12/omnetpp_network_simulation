@@ -1,6 +1,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#define pathLossExponent 1.0
+#define pathLossExponent 3.0
 
 #endif
