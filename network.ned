@@ -16,23 +16,56 @@
 
 network NodeNetwork
 {
+    parameters:
+        int numTransmitters = 10;
+        int radius = default(200);
+        @display("bgb=0,0");
+        
     submodules:
-        transmitter1: TransmitterNode {
-            @display("p=36,38");
-        }
-        transmitter2: TransmitterNode {
-            @display("p=244,38");
+
+        transmitter[numTransmitters]: TransmitterNode {
+            nodeXPosition = radius * cos(2 * 3.14159265 * index / (numTransmitters - 1));
+            nodeYPosition = radius * sin(2 * 3.14159265 * index / (numTransmitters - 1));
+            mac.backoffDistribution = 0.003;
+            mac.maxBackoffs = 5;
+            mac.bufferSize = 5;
+            transceiver.bitRate = 250000;
+            transceiver.csThreshDBm = -50;
+            transceiver.csTime = 0.000125;
+            transceiver.noisePowerDBm = -120;
+            transceiver.turnAroundTime = 0.001;
+            transceiver.txPowerDBm = 0;
+            generator.messageSize = 64;
+            generator.seqno = 0;
+            nodeIndetifier = index + 1;
+            @display("p=$nodeXPosition,$nodeYPosition"); 
         }
         receiver: ReceiverNode {
-            @display("p=140,139");
+            mac.backoffDistribution = 0.003;
+            mac.maxBackoffs = 5;
+            mac.bufferSize = 5;
+            transceiver.bitRate = 250000;
+            transceiver.csThreshDBm = -50;
+            transceiver.csTime = 0.000125;
+            transceiver.noisePowerDBm = -120;
+            transceiver.turnAroundTime = 0.001;
+            transceiver.txPowerDBm = 0;
+            generator.messageSize = 64;
+            generator.seqno = 0;
+            nodeXPosition = 0;
+            nodeYPosition = 0;
+            @display("p=$nodeXPosition,$nodeYPosition"); 
         }
-        chan: WirelessChannel;
+        chan: WirelessChannel {
+            @display("p=0,0"); 
+        }
     connections:
-        transmitter1.out --> chan.in++;
-        transmitter2.out --> chan.in++;
+        for i=0..numTransmitters - 1 {
+            transmitter[i].out --> chan.in++;
+            chan.out++ --> transmitter[i].in;
+        }
+
         receiver.out --> chan.in++;
         chan.out++ --> receiver.in;
-        chan.out++ --> transmitter1.in;
-        chan.out++ --> transmitter2.in;
 }
 
