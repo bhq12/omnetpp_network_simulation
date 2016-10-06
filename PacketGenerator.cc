@@ -41,7 +41,13 @@ void PacketGenerator::handleMessage(cMessage* msg){
         AppMessage* appMsg = new AppMessage("generated");
         int id = getParentModule()->par("nodeIndetifier");
         appMsg -> setSenderId(id);
+        appMsg->setMsgSize(messageSize);
+        appMsg->setTimestamp(simTime().dbl());
+        appMsg->setSequenceNumber(seqno);
+
         send(appMsg, "out");
+
+        seqno++;
 
         //schedule next transmission
         EV_INFO << "Packet created (request new)" << endl;

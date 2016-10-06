@@ -116,14 +116,16 @@ void MAC::handleMessage(cMessage* msg){
 void MAC::transmit(void){
     AppMessage* msg = buffer.front();
     buffer.pop();
-    MacMessage* MacMsg = new MacMessage();
+    MacMessage* macMsg = new MacMessage();
+    macMsg->setBitLength(msg->getMsgSize());
+
     TransmissionRequest* transmit = new TransmissionRequest();
     EV_INFO << "Packet encapsulated app to mac" << endl;
 
-    MacMsg->encapsulate(msg);
-    transmit->encapsulate(MacMsg);
+    macMsg->encapsulate(msg);
+    transmit->encapsulate(macMsg);
     msg =  nullptr;
-    MacMsg = nullptr;
+    macMsg = nullptr;
     send(transmit, "transceiverOut");
 
 }
