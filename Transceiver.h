@@ -67,7 +67,6 @@ public:
         double turnAroundTime;
         double csTime;
         double channelPower;
-        int seqNo;
         long collidedCount;
 
         TransceiverState_t state;

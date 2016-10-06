@@ -26,14 +26,12 @@ void Transceiver::initialize(){
     noisePowerDBm = par("noisePowerDBm");
     turnAroundTime = par("turnAroundTime");
     csTime = par("csTime");
-
     state = Receive;
 
     nodeXPosition = getParentModule()->par("nodeXPosition");
     nodeYPosition = getParentModule()->par("nodeYPosition");
     channelPower  = 0;
     latestPacketLength = 0;
-    seqNo = 0;
     collidedCount = 0;
 }
 
@@ -62,7 +60,6 @@ void Transceiver::handleInternalSignals(cMessage* msg){
     if (strcmp("END_TRANSMISSION", name) == 0){
         delete msg;
         SignalEndMessage* endMessage = new SignalEndMessage();
-        endMessage -> setIdentifier(seqNo - 1);
         int id = getParentModule()->par("nodeIndetifier");
         endMessage -> setSenderId(id);
         SignalStartMessage* startMsg = findAssociatedTransmission(endMessage);
@@ -98,15 +95,12 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         SignalStartMessage* startMessage = new SignalStartMessage();
         startMessage -> encapsulate(nextTransmission);
         startMessage -> setTransmitPowerDBm(txPowerDBm);
-        startMessage -> setIdentifier(seqNo);
+        int id = getParentModule()->par("nodeIndetifier");
+        startMessage -> setSenderId(id);
         startMessage -> setCollidedFlag(false);
         currentTransmissions.insert(currentTransmissions.begin(), startMessage);
-
-        seqNo++;
         send(startMessage, "channelOut");
         scheduleAt(simTime() + ((nextTransmission -> getBitLength())/ bitRate), new cMessage("END_TRANSMISSION"));
-
-
     }
 }
 
@@ -193,9 +187,9 @@ SignalStartMessage* Transceiver::findAssociatedTransmission(SignalEndMessage* en
     if(endMsg){
         int i;
         for(i = 0; i < currentTransmissions.size(); i++){
-            int endMessageId = endMsg->getIdentifier();
+            int endMessageId = endMsg->getSenderId();
             SignalStartMessage* startMsg = currentTransmissions[i];
-            int id = startMsg->getIdentifier();
+            int id = startMsg->getSenderId();
             if (id == endMessageId){
                 currentTransmissions.erase(currentTransmissions.begin()+i-1);
                 return startMsg;
