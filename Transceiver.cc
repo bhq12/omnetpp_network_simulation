@@ -51,7 +51,7 @@ void Transceiver::handleTransmissionRequest(TransmissionRequest* transmissionReq
             delete transmissionRequest;
         }
         else if(state == Transmit){
-            //TODO: The MAC with CSMA should ensure we never reach this state, but we should prepare for it in case of error
+            delete transmissionRequest;
         }
     }
 }
