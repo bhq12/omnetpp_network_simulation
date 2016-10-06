@@ -36,9 +36,10 @@ void MAC::handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm){
     }
 }
 
-void MAC::handleMacMessage(MacMessage* macMsg){
-    if(macMsg){
-        //delete macMsg;
+void MAC::handleTransmissionIndication(TransmissionIndication* transmissionIndication){
+    if(transmissionIndication){
+        MacMessage* macMsg = dynamic_cast<MacMessage*>(transmissionIndication->decapsulate());
+        delete transmissionIndication;
         EV_INFO << "Packet decapsulated (mac to app)" << endl;
 
         AppMessage* appMsg = dynamic_cast<AppMessage*>(macMsg->decapsulate());
@@ -88,13 +89,13 @@ void MAC::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
 
     AppMessage* appMsg = dynamic_cast<AppMessage*>(msg);
-    MacMessage* macMsg = dynamic_cast<MacMessage*>(msg);
+    TransmissionIndication* transmissionIndication = dynamic_cast<TransmissionIndication*>(msg);
     CSResponse* csResponse = dynamic_cast<CSResponse*>(msg);
     TransmissionConfirm* transmissionConfirm = dynamic_cast<TransmissionConfirm*>(msg);
 
 
     handleAppMessage(appMsg);
-    handleMacMessage(macMsg);
+    handleTransmissionIndication(transmissionIndication);
     handleCSResponse(csResponse);
     handleTransmissionConfirm(transmissionConfirm);
 

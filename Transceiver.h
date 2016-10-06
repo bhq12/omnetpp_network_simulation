@@ -28,6 +28,7 @@
 #include "CSResponse_m.h"
 #include "TransmissionRequest_m.h"
 #include "TransmissionConfirm_m.h"
+#include "TransmissionIndication_m.h"
 
 using namespace omnetpp;
 

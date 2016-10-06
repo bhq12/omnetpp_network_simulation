@@ -42,6 +42,7 @@ OBJS = \
     $O/SignalEndMessage_m.o \
     $O/SignalStartMessage_m.o \
     $O/TransmissionConfirm_m.o \
+    $O/TransmissionIndication_m.o \
     $O/TransmissionRequest_m.o
 
 # Message files
@@ -53,6 +54,7 @@ MSGFILES = \
     SignalEndMessage.msg \
     SignalStartMessage.msg \
     TransmissionConfirm.msg \
+    TransmissionIndication.msg \
     TransmissionRequest.msg
 
 # SM files
@@ -162,6 +164,7 @@ $O/MediumAccessControl.o: MediumAccessControl.cc \
 	MacMessage_m.h \
 	MediumAccessControl.h \
 	TransmissionConfirm_m.h \
+	TransmissionIndication_m.h \
 	TransmissionRequest_m.h
 $O/PacketGenerator.o: PacketGenerator.cc \
 	AppMessage_m.h \
@@ -180,10 +183,13 @@ $O/Transceiver.o: Transceiver.cc \
 	SignalStartMessage_m.h \
 	Transceiver.h \
 	TransmissionConfirm_m.h \
+	TransmissionIndication_m.h \
 	TransmissionRequest_m.h \
 	globals.h
 $O/TransmissionConfirm_m.o: TransmissionConfirm_m.cc \
 	TransmissionConfirm_m.h
+$O/TransmissionIndication_m.o: TransmissionIndication_m.cc \
+	TransmissionIndication_m.h
 $O/TransmissionRequest_m.o: TransmissionRequest_m.cc \
 	TransmissionRequest_m.h
 $O/WirelessChannel.o: WirelessChannel.cc \

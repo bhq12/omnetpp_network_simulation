@@ -23,6 +23,7 @@
 #include "CSRequest_m.h"
 #include "TransmissionRequest_m.h"
 #include "TransmissionConfirm_m.h"
+#include "TransmissionIndication_m.h"
 using namespace omnetpp;
 class MAC : public cSimpleModule {
     protected:
@@ -32,7 +33,7 @@ class MAC : public cSimpleModule {
         virtual void transmit(void);
         virtual void handleAppMessage(AppMessage* appMsg);
         virtual void handleCSResponse(CSResponse* csResponse);
-        virtual void handleMacMessage(MacMessage* macMsg);
+        virtual void handleTransmissionIndication(TransmissionIndication* transmissionIndication);
         virtual void handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm);
     public:
         MAC();

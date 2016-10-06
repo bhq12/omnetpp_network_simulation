@@ -173,8 +173,9 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
                 EV_INFO << "erroneous packet dropped" << endl;
             }
             else{
-
-                send(macMsg, "macOut");
+                TransmissionIndication* transmissionIndication = new TransmissionIndication();
+                transmissionIndication->encapsulate(macMsg);
+                send(transmissionIndication, "macOut");
             }
 
 
