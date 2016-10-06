@@ -29,7 +29,7 @@ class PacketSink : public cSimpleModule {
     public:
         PacketSink();
         virtual ~PacketSink();
-        char logFileName[];
+        const char* logFileName;
         void refreshDisplay() const;
 
 };
