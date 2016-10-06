@@ -21,6 +21,9 @@ Define_Module(PacketGenerator);
 void PacketGenerator::initialize(){
     //this is called at the beginning of the simulation
 
+    messageSize = par("messageSize");
+    seqno = par("seqno");
+
     EV_INFO << "Packet created (request new)" << endl;
     cMessage* msg = new cMessage("NEW_MSG");
     double delay = exponential(packetDelayDistribution);

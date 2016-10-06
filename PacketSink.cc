@@ -19,6 +19,7 @@ Define_Module(PacketSink);
 
 void PacketSink::initialize(){
     //just chill
+    logFileName = par("logFileName");
     numReceived = 0;
     WATCH(numReceived);
 }

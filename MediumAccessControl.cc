@@ -20,6 +20,8 @@ Define_Module(MAC);
 void MAC::initialize(){
     //this is called at the beginning of the simulation
     bufferSize  = (int)par("bufferSize");
+    maxBackoffs = par("maxBackoffs");
+    backoffDistribution = par("backoffDistribution");
     backoffs = 0;
 }
 
