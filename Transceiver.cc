@@ -195,7 +195,7 @@ SignalStartMessage* Transceiver::findAssociatedTransmission(SignalEndMessage* en
             SignalStartMessage* startMsg = currentTransmissions[i];
             int id = startMsg->getSenderId();
             if (id == endMessageId){
-                currentTransmissions.erase(currentTransmissions.begin()+i-1);
+                currentTransmissions.erase(currentTransmissions.begin()+i);
                 return startMsg;
             }
         }
