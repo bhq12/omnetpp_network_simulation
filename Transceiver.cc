@@ -116,9 +116,6 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
         //TODO: according to spec: when receiving a signal start msg, extract the ID field and check whether it
         //equals the ID field of any of the start messages stored in the current transmissions list. If so,
         //print an error message and abort the program. See section 8.5 paragraph 2
-        if(startMsg->getCollidedFlag() == true){
-            collidedCount++;
-        }
 
         bool hasCollided = currentTransmissions.size() != 0;
 
@@ -142,7 +139,7 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
         if(startMsg -> getCollidedFlag()){
             //drop the packet
             EV_INFO << "collided packet dropped" << endl;
-
+            collidedCount++;
         }
         else{
             MacMessage* macMsg = static_cast<MacMessage*>(startMsg->decapsulate());
