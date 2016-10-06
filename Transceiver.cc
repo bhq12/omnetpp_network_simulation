@@ -33,6 +33,7 @@ void Transceiver::initialize(){
     channelPower  = 0;
     latestPacketLength = 0;
     collidedCount = 0;
+    errorCount = 0;
 }
 
 //TODO: implement turn-around time
@@ -110,7 +111,7 @@ void Transceiver::handleInternalSignals(cMessage* msg){
 void Transceiver::refreshDisplay() const
 {
     char buf[40];
-    sprintf(buf, "Errors: %ld       ", collidedCount);
+    sprintf(buf, "Errors: %ld   Collisions: %ld     ", errorCount, collidedCount);
     getDisplayString().setTagArg("t", 0, buf);
 }
 
@@ -164,7 +165,7 @@ void Transceiver::handleSignalEndMessage(SignalEndMessage* endMsg){
 
             if(packetErrorIndicator < packetErrorRate){
                 //drop the packet
-                collidedCount++;
+                errorCount++;
                 EV_INFO << "erroneous packet dropped" << endl;
             }
             else{

@@ -68,6 +68,7 @@ public:
         double csTime;
         double channelPower;
         long collidedCount;
+        long errorCount;
 
         TransceiverState_t state;
 
