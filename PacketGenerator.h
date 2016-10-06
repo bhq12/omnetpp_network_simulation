@@ -31,7 +31,7 @@ class PacketGenerator : public cSimpleModule {
         virtual ~PacketGenerator();
         int messageSize;
         int seqno;
-        double packetDelayDistribution = 0.1;
+        double packetDelayDistribution;
 };
 
 #endif /* PACKETGENERATOR_H_ */

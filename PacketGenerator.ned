@@ -17,6 +17,7 @@ simple PacketGenerator{
     parameters:
         int messageSize;
         int seqno;
+        double iatDistribution;
  	gates:
         input in;
         output out;

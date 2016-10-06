@@ -17,8 +17,8 @@
 network NodeNetwork
 {
     parameters:
-        int numTransmitters = 10;
-        int radius = default(200);
+        int numTransmitters = default(5);
+        int radius = default(80);
         @display("bgb=0,0");
         
     submodules:
@@ -35,9 +35,10 @@ network NodeNetwork
             transceiver.noisePowerDBm = -120;
             transceiver.turnAroundTime = 0.001;
             transceiver.txPowerDBm = 0;
-            generator.messageSize = 64;
+            generator.messageSize = 512;
             generator.seqno = 0;
-            nodeIndetifier = index + 1;
+            generator.iatDistribution = 0.02;
+            nodeIndetifier = index;
             @display("p=$nodeXPosition,$nodeYPosition"); 
         }
         receiver: ReceiverNode {
@@ -57,11 +58,13 @@ network NodeNetwork
             @display("p=$nodeXPosition,$nodeYPosition"); 
         }
         chan: WirelessChannel {
-            @display("p=0,0"); 
+            @display("p=0,100"); 
         }
     connections:
         for i=0..numTransmitters - 1 {
             transmitter[i].out --> chan.in++;
+        }
+        for i=0..numTransmitters - 1 {
             chan.out++ --> transmitter[i].in;
         }
 

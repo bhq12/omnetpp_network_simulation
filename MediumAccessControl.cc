@@ -23,6 +23,7 @@ void MAC::initialize(){
     maxBackoffs = par("maxBackoffs");
     backoffDistribution = par("backoffDistribution");
     backoffs = 0;
+    droppedPackets = 0;
 }
 
 void MAC::handleAppMessage(AppMessage* appMsg){
@@ -36,6 +37,13 @@ void MAC::handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm){
         //TODO: probably need to do something here? Or maybe do something if no confirmation is received
         delete transmissionConfirm;
     }
+}
+
+void MAC::refreshDisplay() const
+{
+    char buf[40];
+    sprintf(buf, "Dropped: %ld      ", droppedPackets);
+    getDisplayString().setTagArg("t", 0, buf);
 }
 
 void MAC::handleTransmissionIndication(TransmissionIndication* transmissionIndication){
@@ -142,6 +150,7 @@ bool MAC::addToBuffer(AppMessage* msg){
     }
     else{
         //drop packet
+        droppedPackets++;
         delete msg;
         return false;
 

@@ -102,9 +102,11 @@ void Transceiver::handleInternalSignals(cMessage* msg){
         startMessage -> setPositionX(getParentModule()->par("nodeXPosition"));
         startMessage -> setPositionY(getParentModule()->par("nodeYPosition"));
         startMessage -> setTransmitPowerDBm(txPowerDBm);
-        currentTransmissions.insert(currentTransmissions.begin(), startMessage);
+        handleSignalStartMessage(startMessage);
         send(startMessage, "channelOut");
-        scheduleAt(simTime() + ((nextTransmission -> getBitLength())/ bitRate), new cMessage("END_TRANSMISSION"));
+        double bitLength = nextTransmission -> getBitLength();
+        double messageLength = bitLength / (double)bitRate;
+        scheduleAt(simTime() + messageLength, new cMessage("END_TRANSMISSION"));
     }
 }
 
@@ -123,7 +125,7 @@ void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
 
         bool hasCollided = currentTransmissions.size() != 0;
 
-        currentTransmissions.insert(currentTransmissions.begin(), startMsg);
+        currentTransmissions.push_back(startMsg);
         if(hasCollided){
             //other nodes already transmitting, collision has occured
             int i;
@@ -198,6 +200,7 @@ SignalStartMessage* Transceiver::findAssociatedTransmission(SignalEndMessage* en
             }
         }
     }
+    return nullptr;
 }
 
 void Transceiver::handleCSRequest(CSRequest* csRequest){

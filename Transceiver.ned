@@ -15,7 +15,7 @@
 simple Transceiver{  
     parameters:
         double txPowerDBm;
-        int bitRate;//measured in bits/s
+        double bitRate;//measured in bits/s
         double csThreshDBm;//threshold used to detect whether the medium is busy
         double noisePowerDBm;
 		double turnAroundTime;

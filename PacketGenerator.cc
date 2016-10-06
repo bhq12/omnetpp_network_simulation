@@ -23,7 +23,7 @@ void PacketGenerator::initialize(){
 
     messageSize = par("messageSize");
     seqno = par("seqno");
-
+    packetDelayDistribution = par("iatDistribution");
     EV_INFO << "Packet created (request new)" << endl;
     cMessage* msg = new cMessage("NEW_MSG");
     double delay = exponential(packetDelayDistribution);

@@ -36,6 +36,7 @@ class MAC : public cSimpleModule {
         virtual void handleTransmissionIndication(TransmissionIndication* transmissionIndication);
         virtual void handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm);
         virtual void handleInternalSignals(cMessage* msg);
+        virtual void refreshDisplay() const;
     public:
         MAC();
         virtual ~MAC();
@@ -45,6 +46,7 @@ class MAC : public cSimpleModule {
 
         std::queue<AppMessage*> buffer;
         int backoffs;
+        long droppedPackets;
 
 };
 
