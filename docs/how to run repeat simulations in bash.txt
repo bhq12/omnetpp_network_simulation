@@ -1,7 +1,7 @@
 first: 	specify number of repetitions to add to simulation in the omnetpp.ini file:
 		repeat=10
 
-
+then, in the bash cmd line, run:
 opp_makemake -f											<-- generate Makefile
 make													<-- generate executable with number of repetitions specified
 opp_runall ./omnetpp_network_simulation.exe -r 0..9		<-- run all simulations 0 through 9 in a row,
@@ -9,5 +9,5 @@ opp_runall ./omnetpp_network_simulation.exe -r 0..9		<-- run all simulations 0 t
 															in the omnetpp.ini due to zero indexing
 															
 
-to run all repetitions nonstop automatically without GUI, 
+Note: to run all repetitions nonstop automatically without GUI, 
 simply add the option: "-f Cmdenv" to the end of the opp_runall call
