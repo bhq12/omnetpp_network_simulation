@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for omnetpp_network_simulation
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out
+#  opp_makemake -f
 #
 
 # Name of target to be created (-o option)
@@ -149,52 +149,52 @@ depend:
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/AppMessage_m.o: AppMessage_m.cc \
-	AppMessage_m.h
+  ./AppMessage_m.h
 $O/CSRequest_m.o: CSRequest_m.cc \
-	CSRequest_m.h
+  ./CSRequest_m.h
 $O/CSResponse_m.o: CSResponse_m.cc \
-	CSResponse_m.h
+  ./CSResponse_m.h
 $O/MacMessage_m.o: MacMessage_m.cc \
-	MacMessage_m.h
+  ./MacMessage_m.h
 $O/MediumAccessControl.o: MediumAccessControl.cc \
-	AppMessage_m.h \
-	CSRequest_m.h \
-	CSResponse_m.h \
-	MacMessage_m.h \
-	MediumAccessControl.h \
-	TransmissionConfirm_m.h \
-	TransmissionIndication_m.h \
-	TransmissionRequest_m.h
+  ./AppMessage_m.h \
+  ./CSRequest_m.h \
+  ./CSResponse_m.h \
+  ./MacMessage_m.h \
+  ./MediumAccessControl.h \
+  ./TransmissionConfirm_m.h \
+  ./TransmissionIndication_m.h \
+  ./TransmissionRequest_m.h
 $O/PacketGenerator.o: PacketGenerator.cc \
-	AppMessage_m.h \
-	PacketGenerator.h
+  ./AppMessage_m.h \
+  ./PacketGenerator.h
 $O/PacketSink.o: PacketSink.cc \
-	PacketSink.h
+  ./PacketSink.h
 $O/SignalEndMessage_m.o: SignalEndMessage_m.cc \
-	SignalEndMessage_m.h
+  ./SignalEndMessage_m.h
 $O/SignalStartMessage_m.o: SignalStartMessage_m.cc \
-	SignalStartMessage_m.h
+  ./SignalStartMessage_m.h
 $O/Transceiver.o: Transceiver.cc \
-	AppMessage_m.h \
-	CSRequest_m.h \
-	CSResponse_m.h \
-	SignalEndMessage_m.h \
-	SignalStartMessage_m.h \
-	Transceiver.h \
-	TransmissionConfirm_m.h \
-	TransmissionIndication_m.h \
-	TransmissionRequest_m.h \
-	globals.h
+  ./AppMessage_m.h \
+  ./CSRequest_m.h \
+  ./CSResponse_m.h \
+  ./MACMessage_m.h \
+  ./SignalEndMessage_m.h \
+  ./SignalStartMessage_m.h \
+  ./Transceiver.h \
+  ./TransmissionConfirm_m.h \
+  ./TransmissionIndication_m.h \
+  ./TransmissionRequest_m.h \
+  ./globals.h
 $O/TransmissionConfirm_m.o: TransmissionConfirm_m.cc \
-	TransmissionConfirm_m.h
+  ./TransmissionConfirm_m.h
 $O/TransmissionIndication_m.o: TransmissionIndication_m.cc \
-	TransmissionIndication_m.h
+  ./TransmissionIndication_m.h
 $O/TransmissionRequest_m.o: TransmissionRequest_m.cc \
-	TransmissionRequest_m.h
+  ./TransmissionRequest_m.h
 $O/WirelessChannel.o: WirelessChannel.cc \
-	AppMessage_m.h \
-	MacMessage_m.h \
-	SignalEndMessage_m.h \
-	SignalStartMessage_m.h \
-	WirelessChannel.h
-
+  ./AppMessage_m.h \
+  ./MacMessage_m.h \
+  ./SignalEndMessage_m.h \
+  ./SignalStartMessage_m.h \
+  ./WirelessChannel.h
