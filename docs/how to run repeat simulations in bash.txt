@@ -10,4 +10,4 @@ opp_runall ./omnetpp_network_simulation.exe -r 0..9		<-- run all simulations 0 t
 															
 
 Note: to run all repetitions nonstop automatically without GUI, 
-simply add the option: "-f Cmdenv" to the end of the opp_runall call
+simply add the option: "-u Cmdenv" to the end of the opp_runall call
