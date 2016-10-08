@@ -40,7 +40,7 @@ network NodeNetwork
             transceiver.logFileName = "analysis/outputTx.txt";
             generator.messageSize = 512;
             generator.seqno = 0;
-            generator.iatDistribution = 0.02;
+            generator.iatDistribution = 0.01;
             @display("p=$nodeXPosition,$nodeYPosition"); 
         }
         receiver: ReceiverNode {

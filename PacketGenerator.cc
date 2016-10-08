@@ -53,7 +53,7 @@ void PacketGenerator::handleMessage(cMessage* msg){
         EV_INFO << "Packet created (request new)" << endl;
 
         cMessage* newMsg = new cMessage("NEW_MSG");
-        double delay = exponential(packetDelayDistribution);
+        double delay = packetDelayDistribution;
 
         scheduleAt(simTime() + delay, newMsg);
     }
