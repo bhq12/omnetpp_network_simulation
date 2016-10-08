@@ -14,6 +14,8 @@
 // 
 
 #include <Transceiver.h>
+#include <iostream>
+#include <fstream>
 
 Define_Module(Transceiver);
 
@@ -34,6 +36,10 @@ void Transceiver::initialize(){
     latestPacketLength = 0;
     collidedCount = 0;
     errorCount = 0;
+    std::string c = (std::string) getParentModule()->getFullName();
+    if (c.compare("receiver")==0){
+        logFileName = par("logFileName");
+    }
 }
 
 //TODO: implement turn-around time
@@ -115,7 +121,28 @@ void Transceiver::refreshDisplay() const
     char buf[40];
     sprintf(buf, "Errors: %ld   Collisions: %ld     ", errorCount, collidedCount);
     getDisplayString().setTagArg("t", 0, buf);
+
 }
+
+void Transceiver::finish()
+{
+    std::string c = (std::string) getParentModule()->getFullName();
+    if (c.compare("receiver")==0){
+        std::ofstream myfile;
+            myfile.open (logFileName, std::ios::app);
+            myfile << "e ";
+            myfile << errorCount;
+
+            myfile << " c ";
+            myfile << collidedCount;
+
+            myfile << "\n";
+
+            myfile.close();
+    }
+
+}
+
 
 void Transceiver::handleSignalStartMessage(SignalStartMessage* startMsg){
     if (startMsg){

@@ -24,12 +24,26 @@ void MAC::initialize(){
     backoffDistribution = par("backoffDistribution");
     backoffs = 0;
     droppedPackets = 0;
+    logFileName = par("logFileName");
+
 }
 
 void MAC::handleAppMessage(AppMessage* appMsg){
     if(appMsg){
             addToBuffer(appMsg);
     }
+}
+
+void MAC::finish()
+{
+    std::ofstream myfile;
+    myfile.open (logFileName + std::to_string(getParentModule()->getId()) + ".txt", std::ios::app);
+    myfile << "d ";
+    myfile << droppedPackets;
+
+    myfile << "\n";
+
+    myfile.close();
 }
 
 void MAC::handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm){

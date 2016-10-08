@@ -17,34 +17,37 @@
 network NodeNetwork
 {
     parameters:
-        int numTransmitters = default(5);
-        int radius = default(80);
+        int numTransmitters = default(10);
+        int radius = default(20);
         @display("bgb=0,0");
         
     submodules:
 
         transmitter[numTransmitters]: TransmitterNode {
+            nodeIndetifier = index;
             nodeXPosition = radius * cos(2 * 3.14159265 * index / (numTransmitters - 1));
             nodeYPosition = radius * sin(2 * 3.14159265 * index / (numTransmitters - 1));
             mac.backoffDistribution = 0.003;
             mac.maxBackoffs = 5;
             mac.bufferSize = 5;
+            mac.logFileName = "analysis/outputMac";
             transceiver.bitRate = 250000;
             transceiver.csThreshDBm = -50;
             transceiver.csTime = 0.000125;
             transceiver.noisePowerDBm = -120;
             transceiver.turnAroundTime = 0.001;
             transceiver.txPowerDBm = 0;
+            transceiver.logFileName = "analysis/outputTx.txt";
             generator.messageSize = 512;
             generator.seqno = 0;
             generator.iatDistribution = 0.02;
-            nodeIndetifier = index;
             @display("p=$nodeXPosition,$nodeYPosition"); 
         }
         receiver: ReceiverNode {
             mac.backoffDistribution = 0.003;
             mac.maxBackoffs = 5;
             mac.bufferSize = 5;
+            mac.logFileName = "analysis/useless";  
             transceiver.bitRate = 250000;
             transceiver.csThreshDBm = -50;
             transceiver.csTime = 0.000125;

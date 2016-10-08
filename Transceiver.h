@@ -56,6 +56,7 @@ public:
         virtual double findPacketPowerDB(SignalStartMessage* msg);
         virtual double findTransmitterDistance(SignalStartMessage* msg);
         virtual double findPowerLossDB(double distance);
+        virtual void finish();
 
     public:
         Transceiver();
@@ -78,6 +79,8 @@ public:
         int latestPacketLength;
         MacMessage* nextTransmission;
         void refreshDisplay() const;
+        const char* logFileName;
+
 };
 
 #endif /* TRANSCEIVER_H_ */

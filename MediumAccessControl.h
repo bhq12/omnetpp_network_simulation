@@ -24,6 +24,8 @@
 #include "TransmissionRequest_m.h"
 #include "TransmissionConfirm_m.h"
 #include "TransmissionIndication_m.h"
+#include <iostream>
+#include <fstream>
 using namespace omnetpp;
 class MAC : public cSimpleModule {
     protected:
@@ -37,6 +39,7 @@ class MAC : public cSimpleModule {
         virtual void handleTransmissionConfirm(TransmissionConfirm* transmissionConfirm);
         virtual void handleInternalSignals(cMessage* msg);
         virtual void refreshDisplay() const;
+        virtual void finish();
     public:
         MAC();
         virtual ~MAC();
@@ -47,6 +50,8 @@ class MAC : public cSimpleModule {
         std::queue<AppMessage*> buffer;
         int backoffs;
         long droppedPackets;
+        const char* logFileName;
+
 
 };
 

@@ -17,6 +17,7 @@ simple MAC{
         int bufferSize;
         int maxBackoffs;
         double backoffDistribution;
+    	string logFileName;        
  	gates:
         input packetsIn;
         output packetsOut;

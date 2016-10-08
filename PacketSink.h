@@ -18,6 +18,8 @@
 
 #include <string.h>
 #include <omnetpp.h>
+#include <iostream>
+#include <fstream>
 
 using namespace omnetpp;
 
@@ -31,6 +33,8 @@ class PacketSink : public cSimpleModule {
         virtual ~PacketSink();
         const char* logFileName;
         void refreshDisplay() const;
+        virtual void finish();
+
 
 };
 

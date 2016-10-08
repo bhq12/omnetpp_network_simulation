@@ -24,6 +24,18 @@ void PacketSink::initialize(){
     WATCH(numReceived);
 }
 
+void PacketSink::finish()
+{
+    std::ofstream myfile;
+    myfile.open (logFileName, std::ios::app);
+    myfile << "r ";
+    myfile << numReceived;
+
+    myfile << "\n";
+
+    myfile.close();
+}
+
 void PacketSink::handleMessage(cMessage* msg){
     //this is called whenever a msg arrives at the computer
     numReceived++;

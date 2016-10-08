@@ -20,6 +20,7 @@ simple Transceiver{
         double noisePowerDBm;
 		double turnAroundTime;
         double csTime;
+    	string logFileName;
 	gates:
         input channelIn;
         output channelOut;
