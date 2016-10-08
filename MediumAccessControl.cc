@@ -95,6 +95,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
                 AppMessage* msg = buffer.front();
                 buffer.pop();
                 delete msg;
+                droppedPackets++;
             }
             backoffs++;
         }
