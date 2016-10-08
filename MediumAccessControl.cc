@@ -100,6 +100,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
             backoffs++;
         }
         else{
+            backoffs = 0;
             transmit();
         }
 

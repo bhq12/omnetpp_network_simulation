@@ -25,8 +25,8 @@ network NodeNetwork
 
         transmitter[numTransmitters]: TransmitterNode {
             nodeIndetifier = index;
-            nodeXPosition = radius * cos(2 * 3.14159265 * index / (numTransmitters - 1));
-            nodeYPosition = radius * sin(2 * 3.14159265 * index / (numTransmitters - 1));
+            nodeXPosition = radius * cos(2 * 3.14159265 * index / (numTransmitters));
+            nodeYPosition = radius * sin(2 * 3.14159265 * index / (numTransmitters));
             mac.backoffDistribution = 0.003;
             mac.maxBackoffs = 5;
             mac.bufferSize = 5;
