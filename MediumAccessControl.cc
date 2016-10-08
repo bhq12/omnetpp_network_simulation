@@ -88,7 +88,7 @@ void MAC::handleCSResponse(CSResponse* csResponse){
             if(backoffs < maxBackoffs){
                 double waitTime = exponential(backoffDistribution);
                 scheduleAt(simTime() + waitTime, new cMessage("RETRY_CARRIER_SENSE"));
-
+                backoffs++;
             }
             else{
                 //max backoffs exceeded, drop the packet
@@ -96,8 +96,9 @@ void MAC::handleCSResponse(CSResponse* csResponse){
                 buffer.pop();
                 delete msg;
                 droppedPackets++;
+                backoffs = 0;
             }
-            backoffs++;
+
         }
         else{
             backoffs = 0;
