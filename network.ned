@@ -17,8 +17,8 @@
 network NodeNetwork
 {
     parameters:
-        int numTransmitters = default(10);
-        int radius = default(20);
+        int numTransmitters = default(1);
+        int radius = default(50);
         @display("bgb=0,0");
         
     submodules:
